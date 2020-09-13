@@ -1,7 +1,4 @@
 alabaster==0.7.12
-anaconda-client==1.7.2
-anaconda-navigator==1.9.12
-anaconda-project==0.8.3
 argh==0.26.2
 arviz==0.8.3
 asn1crypto==1.3.0
@@ -30,7 +27,7 @@ certifi==2019.11.28
 cffi==1.14.0
 cftime==1.1.3
 chardet==3.0.4
-Click==7.0
+Click==5.1
 cloudpickle==1.3.0
 clyent==1.2.2
 colorama==0.4.3
@@ -76,10 +73,10 @@ ipython==7.12.0
 ipython-genutils==0.2.0
 ipywidgets==7.5.1
 isort==4.3.21
-itsdangerous==1.1.0
+itsdangerous==0.24
 jdcal==1.4.1
 jedi==0.14.1
-Jinja2==2.11.1
+Jinja2==2.10.1
 jmespath==0.10.0
 joblib==0.14.1
 json5==0.9.1
@@ -97,7 +94,7 @@ libarchive-c==2.8
 llvmlite==0.31.0
 locket==0.2.0
 lxml==4.5.0
-MarkupSafe==1.1.1
+MarkupSafe==0.23
 matplotlib==3.1.3
 mccabe==0.6.1
 menuinst==1.4.16
@@ -231,7 +228,7 @@ values==0.0.0
 watchdog==0.10.2
 wcwidth==0.1.8
 webencodings==0.5.1
-Werkzeug==1.0.0
+Werkzeug==0.15
 wget==3.2
 widgetsnbextension==3.5.1
 win-inet-pton==1.1.0
