@@ -7,4 +7,4 @@ MarkupSafe==0.23
 Werkzeug==0.15
 Flask-SQLAlchemy==2.4.4
 Flask-Migrate==2.5.3
-psycopg==2.8.4
+psycopg2==2.8.4
