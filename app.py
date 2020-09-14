@@ -1,12 +1,6 @@
-from flask import Flask, request, jsonify, Response, render_template
-import io
-import pymysql
-from db_config import mysql
-from tables import Results
-from werkzeug.security import generate_password_hash, check_password_hash
-app = Flask(__name__)
+from flask import Flask
 
-"""@app.route('/getmsg/', methods=['GET'])
+@app.route('/getmsg/', methods=['GET'])
 def respond():
     # Retrieve the name from url parameter
     name = request.args.get("name", None)
@@ -44,7 +38,7 @@ def post_something():
         return jsonify({
             "ERROR": "no name found, please send a name."
         })
-"""
+
 # A welcome message to test our server
 @app.route('/')
 def index():
@@ -52,4 +46,7 @@ def index():
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True)
+    app.run(threaded=True, port=5000)
+
+if __name__ == '__main__':
+    app.run()
