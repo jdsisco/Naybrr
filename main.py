@@ -4,9 +4,10 @@ from app import app
 from db_config import mysql
 from tables import Results
 from flask import Flask, Response, render_template
+from werkzeug.security import generate_password_hash, check_password_hash
 
-@app.route('/')
-def new_user_view():
+@app.route('/new_user')
+def add_user_view():
 	return render_template('add.html')
 
 """@app.route('/add', methods=['POST'])
@@ -41,7 +42,7 @@ def new_user():
 """
 
 @app.route('/add', methods=['POST'])
-    def new_user():
+def add_user():
     conn = None
     cursor = None
     try: 
@@ -51,18 +52,18 @@ def new_user():
     # validate the received values
         if _name and _email and _password and request.method == 'POST':
         #do not save password as a plain text
-        _hashed_password = generate_password_hash(_password)
+            _hashed_password = generate_password_hash(_password)
         # save edits
-        sql = "INSERT INTO Naybrr.Account(Username, Email, HashPass) VALUES(%s, %s, %s)"
-        data = (_name, _email, _hashed_password,)
-        conn = mysql.connect()
-        cursor = conn.cursor()
-        cursor.execute(sql, data)
-        conn.commit()
-    flash('User added successfully!')
-    return redirect('/')
-    else:
-    return 'Error while adding user'
+            sql = "INSERT INTO Naybrr.Account(Username, Email, HashPass) VALUES(%s, %s, %s)" 
+            data = (_name, _email, _hashed_password,)
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.execute(sql, data)
+            conn.commit()
+            flash('User added successfully!')
+            return redirect('/')
+        else:
+            return 'Error while adding user'
     except Exception as e:
         print(e)
     finally:
