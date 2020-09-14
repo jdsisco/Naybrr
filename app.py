@@ -13,37 +13,35 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:pmUQjdnk3sQbMsmosJE9@naybrr.ctwclmh06vdt.us-east-2.rds.amazonaws.com:3306/Naybrr'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-#db = SQLAlchemy(app)
+@app.route('/add')
+def new_user():
+    try:
+        connection = psycopg2.connect(user="tpjfsrbkxqwbln",
+                                    password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
+                                    host="ec2-52-200-134-180.compute-1.amazonaws.com",
+                                    port="5432",
+                                    database="dcfp0d6kcu6bnh")
+        cursor = connection.cursor()
 
-try:
-    connection = psycopg2.connect(user="tpjfsrbkxqwbln",
-                                  password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
-                                  host="ec2-52-200-134-180.compute-1.amazonaws.com",
-                                  port="5432",
-                                  database="dcfp0d6kcu6bnh")
-    cursor = connection.cursor()
+        postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
+        record_to_insert = ('test1', 'test1@email.com', '1234')
+        cursor.execute(postgres_insert_query, record_to_insert)
 
-    postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
-    record_to_insert = ('test', 'test@email.com', '1234')
-    cursor.execute(postgres_insert_query, record_to_insert)
+        connection.commit()
+        count = cursor.rowcount
+        print (count, "Record inserted successfully into account table")
 
-    connection.commit()
-    count = cursor.rowcount
-    print (count, "Record inserted successfully into account table")
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to insert record into account table", error)
 
-except (Exception, psycopg2.Error) as error :
-    if(connection):
-        print("Failed to insert record into account table", error)
-
-finally:
-    #closing database connection.
-    if(connection):
-        cursor.close()
-        connection.close()
-        print("PostgreSQL connection is closed")
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
 
 """
 class DataTest(db.Model):
