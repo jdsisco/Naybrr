@@ -34,7 +34,7 @@ try:
         INSERT INTO account(username, email, hashpass) 
         SELECT new_username, new_email, new_password
         FROM data
-        RETURNING accountid AS account_id),
+        RETURNING accountid AS (account_id),
         new_address AS (
         INSERT INTO customeraddress(accountid, line1, line2, city, state, zip)
         SELECT new_line1, new_line2, new_city, new_state, new_zip 
