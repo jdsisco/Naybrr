@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+app = Flask(__name__)
 
 @app.route('/getmsg/', methods=['GET'])
 def respond():
@@ -46,4 +47,4 @@ def index():
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
-    app.run()
+    app.run(threaded=True)
