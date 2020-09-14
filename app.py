@@ -7,6 +7,7 @@ import sys
 import json
 import os
 import psycopg2
+from psycopg2 import Error
 
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -18,14 +19,26 @@ app = Flask(__name__)
 #db = SQLAlchemy(app)
 
 try:
-   connection = psycopg2.connect(user="tpjfsrbkxqwbln",
+    connection = psycopg2.connect(user="tpjfsrbkxqwbln",
                                   password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
                                   host="ec2-52-200-134-180.compute-1.amazonaws.com",
                                   port="5432",
                                   database="dcfp0d6kcu6bnh")
-   cursor = connection.cursor()
+    cursor = connection.cursor()
+    
+    create_table_query = '''CREATE TABLE mobile
+          (ID INT PRIMARY KEY     NOT NULL,
+          MODEL           TEXT    NOT NULL,
+          PRICE         REAL); '''
+    
+    cursor.execute(create_table_query)
+    connection.commit()
+    print("Table created successfully in PostgreSQL ")
 
-   postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
+except (Exception, psycopg2.DatabaseError) as error :
+    print ("Error while creating PostgreSQL table", error)
+
+  """ postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
    record_to_insert = (5, 'One Plus 6', 950)
    cursor.execute(postgres_insert_query, record_to_insert)
 
@@ -35,7 +48,7 @@ try:
 
 except (Exception, psycopg2.Error) as error :
     if(connection):
-        print("Failed to insert record into mobile table", error)
+        print("Failed to insert record into mobile table", error) """
 
 finally:
     #closing database connection.
