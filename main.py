@@ -70,24 +70,24 @@ def add_user():
         cursor.close() 
         conn.close()
 
-"""#@app.route('/')
-#def users():
-conn = None
-cursor = None
-try:
-conn = mysql.connect()
-cursor = conn.cursor(pymysql.cursors.DictCursor)
-cursor.execute("SELECT * FROM tbl_user")
-rows = cursor.fetchall()
-table = Results(rows)
-table.border = True
-return render_template('users.html', table=table)
-except Exception as e:
-print(e)
-finally:
-cursor.close() 
-conn.close()
-
+@app.route('/table')
+def users():
+    conn = None
+    cursor = None
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute("SELECT * FROM Naybrr.Account")
+        rows = cursor.fetchall()
+        table = Results(rows)
+        table.border = True
+        return render_template('users.html', table=table)
+    except Exception as e:
+        print(e)
+    finally:
+        cursor.close() 
+        conn.close()
+"""
 @app.route('/edit/<int:id>')
 def edit_view(id):
 conn = None
@@ -157,4 +157,4 @@ cursor.close()
 conn.close() """
 
 if __name__ == "__main__":
-app.run()
+app.run(threaded=True)
