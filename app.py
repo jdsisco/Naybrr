@@ -26,13 +26,13 @@ try:
                                   database="dcfp0d6kcu6bnh")
     cursor = connection.cursor()
 
-   postgres_insert_query = """ INSERT INTO account (username email, hashpass) VALUES (%s,%s,%s)"""
-   record_to_insert = ('test', 'test@email.com', '1234')
-   cursor.execute(postgres_insert_query, record_to_insert)
+    postgres_insert_query = """ INSERT INTO account (username email, hashpass) VALUES (%s,%s,%s)"""
+    record_to_insert = ('test', 'test@email.com', '1234')
+    cursor.execute(postgres_insert_query, record_to_insert)
 
-   connection.commit()
-   count = cursor.rowcount
-   print (count, "Record inserted successfully into account table")
+    connection.commit()
+    count = cursor.rowcount
+    print (count, "Record inserted successfully into account table")
 
 except (Exception, psycopg2.Error) as error :
     if(connection):
