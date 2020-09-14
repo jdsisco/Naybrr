@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/getmsg/', methods=['GET'])
 def respond():
     # Retrieve the name from url parameter
-    Username = request.args.get("Username", None)
+    Username = request.args.get("name", None)
 
     # For debugging
     print(f"got Username {Username}")
