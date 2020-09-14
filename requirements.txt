@@ -12,3 +12,4 @@ flask-table==0.5.0
 flask-mysql==1.5.1
 flask-marshmallow==0.13.0
 marshmallow==3.7.1
+marshmallow-sqlalchemy==0.23.1
