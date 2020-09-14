@@ -13,35 +13,52 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:pmUQjdnk3sQbMsmosJE9@naybrr.ctwclmh06vdt.us-east-2.rds.amazonaws.com:3306/Naybrr'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-@app.route('/add')
-def new_user():
-    try:
-        connection = psycopg2.connect(user="tpjfsrbkxqwbln",
-                                    password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
-                                    host="ec2-52-200-134-180.compute-1.amazonaws.com",
-                                    port="5432",
-                                    database="dcfp0d6kcu6bnh")
-        cursor = connection.cursor()
+#db = SQLAlchemy(app)
 
-        postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
-        record_to_insert = ('test1', 'test1@email.com', '1234')
-        cursor.execute(postgres_insert_query, record_to_insert)
+try:
+    connection = psycopg2.connect(user="tpjfsrbkxqwbln",
+                                  password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
+                                  host="ec2-52-200-134-180.compute-1.amazonaws.com",
+                                  port="5432",
+                                  database="dcfp0d6kcu6bnh")
+    cursor = connection.cursor()
 
-        connection.commit()
-        count = cursor.rowcount
-        print (count, "Record inserted successfully into account table")
+    #postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
+    postgres_insert_query = """WITH data (new_username, new_email, new_password, new_line1, new_line2, new_city, new_state, new_zip) AS (
+        VALUES(%s,%s,%s,%s,%s,%s,%s,%s), 
+        new_neighbor AS (
+        INSERT INTO account(username, email, hashpass) 
+        SELECT new_username, new_email, new_password
+        FROM data
+        RETURNING accountid AS account_id),
+        new_address AS (
+        INSERT INTO customeraddress(accountid, line1, line2, city, state, zip)
+        SELECT new_line1, new_line2, new_city, new_state, new_zip 
+        FROM data
+        JOIN new_neighbor USING (account_id)
+        )
 
-    except (Exception, psycopg2.Error) as error :
-        if(connection):
-            print("Failed to insert record into account table", error)
+    )"""
+    record_to_insert = ('test2', 'test@email.com', '12345','1 NEIT Boulevard',null, 'East Greenwich','RI','04345')
+    cursor.execute(postgres_insert_query, record_to_insert)
 
-    finally:
-        #closing database connection.
-        if(connection):
-            cursor.close()
-            connection.close()
-            print("PostgreSQL connection is closed")
+    connection.commit()
+    count = cursor.rowcount
+    print (count, "Record inserted successfully into account table")
+
+except (Exception, psycopg2.Error) as error :
+    if(connection):
+        print("Failed to insert record into account table", error)
+
+finally:
+    #closing database connection.
+    if(connection):
+        cursor.close()
+        connection.close()
+        print("PostgreSQL connection is closed")
 
 """
 class DataTest(db.Model):
