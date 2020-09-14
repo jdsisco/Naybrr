@@ -5,13 +5,46 @@ from marshmallow_sqlalchemy import ModelSchema
 from marshmallow import fields
 import sys
 import json
+import os
+import psycopg2
+
+DATABASE_URL = os.environ['DATABASE_URL']
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:pmUQjdnk3sQbMsmosJE9@naybrr.ctwclmh06vdt.us-east-2.rds.amazonaws.com:3306/Naybrr'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:pmUQjdnk3sQbMsmosJE9@naybrr.ctwclmh06vdt.us-east-2.rds.amazonaws.com:3306/Naybrr'
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
+try:
+   connection = psycopg2.connect(user="tpjfsrbkxqwbln",
+                                  password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
+                                  host="ec2-52-200-134-180.compute-1.amazonaws.com",
+                                  port="5432",
+                                  database="dcfp0d6kcu6bnh")
+   cursor = connection.cursor()
+
+   postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
+   record_to_insert = (5, 'One Plus 6', 950)
+   cursor.execute(postgres_insert_query, record_to_insert)
+
+   connection.commit()
+   count = cursor.rowcount
+   print (count, "Record inserted successfully into mobile table")
+
+except (Exception, psycopg2.Error) as error :
+    if(connection):
+        print("Failed to insert record into mobile table", error)
+
+finally:
+    #closing database connection.
+    if(connection):
+        cursor.close()
+        connection.close()
+        print("PostgreSQL connection is closed")
+
+"""
 class DataTest(db.Model):
     __tablename__ = "test"
     id = db.Column(db.Integer, primary_key=True)
@@ -37,7 +70,7 @@ def post_to_db():
 
 @app.route("/")
 def enter_data(): 
-    return render_template("data.html")
+    return render_template("data.html")"""
 
 @app.route('/test')
 def index():
