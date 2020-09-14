@@ -37,9 +37,22 @@ try:
 
 except (Exception, psycopg2.DatabaseError) as error :
     print ("Error while creating PostgreSQL table", error)
+finally:
+    #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+try:
+    connection = psycopg2.connect(user="tpjfsrbkxqwbln",
+                                  password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
+                                  host="ec2-52-200-134-180.compute-1.amazonaws.com",
+                                  port="5432",
+                                  database="dcfp0d6kcu6bnh")
+    cursor = connection.cursor()
 
-  #postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
- """  record_to_insert = (5, 'One Plus 6', 950)
+   postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
+   record_to_insert = (5, 'One Plus 6', 950)
    cursor.execute(postgres_insert_query, record_to_insert)
 
    connection.commit()
@@ -48,7 +61,7 @@ except (Exception, psycopg2.DatabaseError) as error :
 
 except (Exception, psycopg2.Error) as error :
     if(connection):
-        print("Failed to insert record into mobile table", error)"""
+        print("Failed to insert record into mobile table", error)
 
 finally:
     #closing database connection.
