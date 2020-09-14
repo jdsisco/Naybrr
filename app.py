@@ -26,10 +26,7 @@ try:
                                   database="dcfp0d6kcu6bnh")
     cursor = connection.cursor()
     
-    create_table_query = '''CREATE TABLE mobile
-          (ID INT PRIMARY KEY     NOT NULL,
-          MODEL           TEXT    NOT NULL,
-          PRICE         REAL); '''
+    create_table_query = '''CREATE TABLE mobile (ID INT PRIMARY KEY NOT NULL, MODEL TEXT NOT NULL, PRICE REAL); '''
     
     cursor.execute(create_table_query)
     connection.commit()
@@ -43,32 +40,7 @@ finally:
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
-try:
-    connection = psycopg2.connect(user="tpjfsrbkxqwbln",
-                                  password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
-                                  host="ec2-52-200-134-180.compute-1.amazonaws.com",
-                                  port="5432",
-                                  database="dcfp0d6kcu6bnh")
-    cursor = connection.cursor()
 
-   postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
-   record_to_insert = (5, 'One Plus 6', 950)
-   cursor.execute(postgres_insert_query, record_to_insert)
-
-   connection.commit()
-   count = cursor.rowcount
-   print (count, "Record inserted successfully into mobile table")
-
-except (Exception, psycopg2.Error) as error :
-    if(connection):
-        print("Failed to insert record into mobile table", error)
-
-finally:
-    #closing database connection.
-    if(connection):
-        cursor.close()
-        connection.close()
-        print("PostgreSQL connection is closed")
 
 """
 class DataTest(db.Model):
