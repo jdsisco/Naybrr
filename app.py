@@ -19,12 +19,12 @@ app = Flask(__name__)
 #db = SQLAlchemy(app)
 
 try:
-  """  connection = psycopg2.connect(user="tpjfsrbkxqwbln",
+    connection = psycopg2.connect(user="tpjfsrbkxqwbln",
                                   password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
                                   host="ec2-52-200-134-180.compute-1.amazonaws.com",
                                   port="5432",
-                                  database="dcfp0d6kcu6bnh")"""
-    cursor = connection.cursor()
+                                  database="dcfp0d6kcu6bnh")
+    cursor = conn.cursor()
 
     #postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
     postgres_insert_query = """WITH data (new_username, new_email, new_password, new_line1, new_line2, new_city, new_state, new_zip) AS (
