@@ -38,8 +38,8 @@ try:
 except (Exception, psycopg2.DatabaseError) as error :
     print ("Error while creating PostgreSQL table", error)
 
-  """ postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
-   record_to_insert = (5, 'One Plus 6', 950)
+  #postgres_insert_query = """ INSERT INTO mobile (ID, MODEL, PRICE) VALUES (%s,%s,%s)"""
+ """  record_to_insert = (5, 'One Plus 6', 950)
    cursor.execute(postgres_insert_query, record_to_insert)
 
    connection.commit()
@@ -48,7 +48,7 @@ except (Exception, psycopg2.DatabaseError) as error :
 
 except (Exception, psycopg2.Error) as error :
     if(connection):
-        print("Failed to insert record into mobile table", error) """
+        print("Failed to insert record into mobile table", error)"""
 
 finally:
     #closing database connection.
