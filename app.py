@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, Response, render_template
 import io
 import pymysql
-from app import app
 from db_config import mysql
 from tables import Results
 from werkzeug.security import generate_password_hash, check_password_hash
