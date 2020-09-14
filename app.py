@@ -29,7 +29,7 @@ try:
 
     #postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
     postgres_insert_query = """WITH data (new_username, new_email, new_password, new_line1, new_line2, new_city, new_state, new_zip) AS (
-        VALUES(%s,%s,%s,%s,%s,%s,%s,%s)), 
+        VALUES(%s,%s,%s,%s,%s,%s,%s,%s), 
         new_neighbor AS (
         INSERT INTO account(username, email, hashpass) 
         SELECT new_username, new_email, new_password
