@@ -28,12 +28,12 @@ try:
     cursor = connection.cursor()
 
     #postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
-    postgres_insert_query = """ WITH data (username, email, password, line1, line2, city, state, zip) AS 
+    postgres_insert_query = """ WITH data (username, email, hashpass line1, line2, city, state, zip) AS 
     (
         VALUES(%s,%s,%s,%s,%s,%s,%s,%s)), 
         neighbor AS (
         INSERT INTO account (username, email, hashpass) 
-        SELECT username, email, password FROM data
+        SELECT username, email, hashpass FROM data
         RETURNING accountid AS account_id),
         address AS (
         INSERT INTO customeraddress(accountid, line1, line2, city, state, zip)
