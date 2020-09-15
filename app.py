@@ -13,7 +13,7 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app = Flask(__name__)
-@app.route("/new")
+@app.route("/new", methods=["GET"])
 def new_user():
     try:
         """connection = psycopg2.connect(user="tpjfsrbkxqwbln",
