@@ -65,7 +65,7 @@ def user_inventory():
     resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath
     return resp
 
-@app.route("/insert",method=["GET"])
+@app.route("/insert",methods=["GET"])
 def add_item():
     resp = jsonify(success=True)
     return resp
