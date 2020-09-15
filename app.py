@@ -47,6 +47,7 @@ def new_user():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
+    return 'Neighbor added.'
 
 """
 class DataTest(db.Model):
