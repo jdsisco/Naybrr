@@ -39,7 +39,7 @@ try:
         INSERT INTO customeraddress(accountid, line1, line2, city, state, zip)
         SELECT line1, line2, city, state, zip FROM data
         JOIN neighbor USING (account_id)
-        ));
+        );
 
     """
     record_to_insert = ('test2', 'test@email.com', '12345','1 NEIT Boulevard','suite 150', 'East Greenwich','RI','04345')
