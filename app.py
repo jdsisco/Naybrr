@@ -41,7 +41,7 @@ try:
         JOIN neighbor USING (account_id)
         )
 
-    )"""
+    """
     record_to_insert = ('test2', 'test@email.com', '12345','1 NEIT Boulevard','suite 150', 'East Greenwich','RI','04345')
     cursor.execute(postgres_insert_query, record_to_insert)
 
