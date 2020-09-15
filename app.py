@@ -11,7 +11,7 @@ from psycopg2 import Error
 
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
+empty = None
 app = Flask(__name__)
 @app.route("/new", methods=["GET"])
 def new_user():
@@ -25,7 +25,7 @@ def new_user():
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor;
         """
-        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard',None, 'Providence','RI','02445')
+        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard',empty, 'Providence','RI','02445')
         cursor.execute(postgres_insert_query, record_to_insert)
 
         connection.commit()
