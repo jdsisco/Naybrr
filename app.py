@@ -13,11 +13,6 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI']='mysql+pymysql://root:pmUQjdnk3sQbMsmosJE9@naybrr.ctwclmh06vdt.us-east-2.rds.amazonaws.com:3306/Naybrr'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-#db = SQLAlchemy(app)
-
 try:
     """connection = psycopg2.connect(user="tpjfsrbkxqwbln",
                                   password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
@@ -28,19 +23,12 @@ try:
     cursor = connection.cursor()
 
     #postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
-    postgres_insert_query = """ WITH data (username, email, hashpass, line1, line2, city, state, zip) AS 
-    (
-        VALUES(%s,%s,%s,%s,%s,%s,%s,%s)), 
-        neighbor AS (
-        INSERT INTO account (username, email, hashpass) 
-        SELECT username, email, hashpass FROM data
-        RETURNING accountid AS account_id),
-        address AS (
-        INSERT INTO customeraddress(accountid, line1, line2, city, state, zip)
-        SELECT line1, line2, city, state, zip FROM data
-        JOIN neighbor USING account_id)
-        )
-
+   
+    postgres_insert_query = """ WITH neighbor AS (
+        INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)
+        RETURNING accountid)
+        INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) VALUES 
+        SELECT accountid,%s,%s,%s,%s,%s from neighbor;
     """
     record_to_insert = ('test2', 'test@email.com', '12345','1 NEIT Boulevard','suite 150', 'East Greenwich','RI','04345')
     cursor.execute(postgres_insert_query, record_to_insert)
