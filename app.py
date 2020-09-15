@@ -12,7 +12,6 @@ from psycopg2 import Error
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-resp = jsonify()
 app = Flask(__name__)
 @app.route("/new", methods=["GET"])
 def new_user():
@@ -32,7 +31,11 @@ def new_user():
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
-        resp = jsonify(success=True)
+        resp = app.response_class(
+            response=json.dumps(data),
+            status=200,
+            mimetype='application/json')
+        return resp
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
@@ -44,7 +47,7 @@ def new_user():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
-    return resp
+    
 
 @app.route("/login", methods=["GET"])
 def login():
