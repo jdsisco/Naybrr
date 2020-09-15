@@ -16,11 +16,6 @@ app = Flask(__name__)
 @app.route("/new", methods=["GET"])
 def new_user():
     try:
-        """connection = psycopg2.connect(user="tpjfsrbkxqwbln",
-                                    password="4710d90b684d897948315dcb66a50d659b585bd6e13906152dc1d4cdd13b9bc5",
-                                    host="ec2-52-200-134-180.compute-1.amazonaws.com",
-                                    port="5432",
-                                    database="dcfp0d6kcu6bnh")"""
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
@@ -30,12 +25,13 @@ def new_user():
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor;
         """
-        record_to_insert = ('test2', 'test2nd@email.com', '12345','1 NEIT Boulevard','suite 150', 'East Greenwich','RI','04345')
+        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard',, 'Providence','RI','02445')
         cursor.execute(postgres_insert_query, record_to_insert)
 
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
+        resp = jsonify(success=True)
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
@@ -47,17 +43,48 @@ def new_user():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
-    return 'Neighbor added.'
+    return resp
 
+@app.route("/login", methods=["GET"])
+def login():
+    resp = jsonify(success=True)
+    return resp
+
+@app.route("/update", methods=["GET"])
+def update_user():
+    resp = jsonify(success=True)
+    return resp
+
+@app.route("/find", methods=["POST"])
+def find_user():
+    resp = jsonify(success=True) #Return Account ID and username
+    return resp
+
+@app.route("/nearby",methods=["POST"])
+def user_inventory():
+    resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath
+    return resp
+
+@app.route("/insert",method=["GET"])
+def add_item():
+    resp = jsonify(success=True)
+    return resp
+
+@app.route("/UpdateItem",methods=["POST"])
+def update_item():
+    resp = jsonify(success=True)
+    return resp
+
+@app.route("/delete",methods=["POST"])
+def delete_item():
+    resp = jsonify(success=True)
+    return resp
+
+@app.route("/item",methods=["GET"])
+def find_item():
+    resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath (single?)
+    return resp
 """
-class DataTest(db.Model):
-    __tablename__ = "test"
-    id = db.Column(db.Integer, primary_key=True)
-    mydata = db.Column(db.Text())
-
-    def __init__ (self, mydata):
-        self.mydata = mydata
-
 
 @app.route("/submit", methods=["POST"])
 def post_to_db():
@@ -72,10 +99,7 @@ def post_to_db():
         print(e)
         sys.stdout.flush()
     return 'Success! To enter more data, <a href="{}">click here!</a>'.format(url_for("enter_data"))
-
-@app.route("/")
-def enter_data(): 
-    return render_template("data.html")"""
+"""
 
 @app.route('/test')
 def index():
