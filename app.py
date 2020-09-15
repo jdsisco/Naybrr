@@ -25,7 +25,7 @@ def new_user():
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor;
         """
-        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard',null, 'Providence','RI','02445')
+        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard',None, 'Providence','RI','02445')
         cursor.execute(postgres_insert_query, record_to_insert)
 
         connection.commit()
@@ -47,7 +47,20 @@ def new_user():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
+
+            
+    """def get_current_user():
+    return jsonify(
+        username=g.user.username,
+        email=g.user.email,
+        id=g.user.id
+    )
     
+    {
+    "username": "admin",
+    "email": "admin@localhost",
+    "id": 42
+}"""
 
 @app.route("/login", methods=["GET"])
 def login():
