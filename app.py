@@ -27,7 +27,7 @@ try:
     postgres_insert_query = """ WITH neighbor AS (
         INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)
         RETURNING accountid)
-        INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) VALUES 
+        INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
         SELECT accountid,%s,%s,%s,%s,%s from neighbor;
     """
     record_to_insert = ('test2', 'test@email.com', '12345','1 NEIT Boulevard','suite 150', 'East Greenwich','RI','04345')
