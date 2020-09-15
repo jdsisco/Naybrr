@@ -28,7 +28,7 @@ try:
     cursor = connection.cursor()
 
     #postgres_insert_query = """ INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)"""
-    postgres_insert_query = """ WITH data (username, email, hashpass line1, line2, city, state, zip) AS 
+    postgres_insert_query = """ WITH data (username, email, hashpass, line1, line2, city, state, zip) AS 
     (
         VALUES(%s,%s,%s,%s,%s,%s,%s,%s)), 
         neighbor AS (
