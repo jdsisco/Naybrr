@@ -174,7 +174,7 @@ def find():
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
         WHERE zip = %s; """
         search_zip = ('02201')
-        cursor.execute(postgres_get_query, current_account)
+        cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
