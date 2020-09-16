@@ -121,10 +121,10 @@ def update_user():
         cursor.execute(postgres_update_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
-            credentials = json.dumps(cursor.fetchall())
-            resp = jsonify(success=True)
-            print (credentials)
-            return resp
+        credentials = json.dumps(cursor.fetchall())
+        resp = jsonify(success=True)
+        print (credentials)
+        return resp
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
