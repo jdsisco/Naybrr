@@ -164,7 +164,39 @@ def update_user():
                 cursor.close()
                 connection.close()
                 print("PostgreSQL connection is closed")
-""" 
+
+    except:
+
+@app.route("/find", methods=["GET","POST"])
+def find():
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        postgres_get_query = """ SELECT account.accountid, username FROM account 
+        INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
+        WHERE zip = %s; """
+        search_zip = ('02201')
+        cursor.execute(postgres_get_query, search_zip)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = json.dumps(cursor.fetchall())
+        resp = jsonify(success=True)
+        print (credentials)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to find zip code", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+
 
 @app.route("/nearby",methods=["POST"])
 def user_inventory():
@@ -194,6 +226,6 @@ def find_item():
 @app.route('/test')
 def index():
     return "<h1>Testing Naybrr Server</h1>"
- """
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
