@@ -47,19 +47,6 @@ def new_user():
             connection.close()
             print("PostgreSQL connection is closed")
 
-            
-    """def get_current_user():
-    return jsonify(
-        username=g.user.username,
-        email=g.user.email,
-        id=g.user.id
-    )
-    
-    {
-    "username": "admin",
-    "email": "admin@localhost",
-    "id": 42
-}"""
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -133,7 +120,8 @@ def update_user():
         xconn = jsonify(success=False)
         return xconn
 
-    """try:        #Need to connect update status with pulled account information.
+#Need to connect update status with pulled account information.
+    """try:        
         try:
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
@@ -202,12 +190,40 @@ def user_inventory():
     resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath
     return resp
 
-@app.route("/insert",methods=["GET"])
+@app.route("/newItem",methods=["GET"])
 def add_item():
-    resp = jsonify(success=True)
-    return resp
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        
+        postgres_item_query = """ WITH newitem AS (
+            INSERT INTO inventory (accountid, itemname, price, quantity, imagepath, description) 
+            VALUES (%s,%s,%s,%s,%s,%s)
+            RETURNING itemid, accountid)
+            SELECT username from newitem;
+        """
+        insert_item = ('3', 'Salt', '1.50','2', empty, 'This is salt.')
+        cursor.execute(postgres_item_query, insert_item)
+        connection.commit()
+        count = cursor.rowcount
+        print (count, "Record inserted as new item")
+        resp = jsonify(success=True)
+        return resp
 
-@app.route("/UpdateItem",methods=["POST"])
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to insert new item", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+
+@app.route("/updateItem",methods=["POST"])
 def update_item():
     resp = jsonify(success=True)
     return resp
