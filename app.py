@@ -164,9 +164,9 @@ def update_user():
                 cursor.close()
                 connection.close()
                 print("PostgreSQL connection is closed")
-                
-                
-@app.route("/nearby",methods=["POST"])
+
+
+"""@app.route("/nearby",methods=["POST"])
 def user_inventory():
     resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath
     return resp
@@ -189,7 +189,7 @@ def delete_item():
 @app.route("/item",methods=["GET"])
 def find_item():
     resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath (single?)
-    return resp
+    return resp"""
 
 @app.route('/test')
 def index():
