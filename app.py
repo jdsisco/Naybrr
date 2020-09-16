@@ -21,13 +21,13 @@ def new_user():
         
         postgres_insert_query = """ WITH neighbor AS (
             INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)
-            RETURNING accountid)
+            RETURNING accountid, username), newaddress as (
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
-            SELECT accountid,%s,%s,%s,%s,%s from neighbor;
+            SELECT accountid,%s,%s,%s,%s,%s from neighbor) 
+            SELECT username from neighbor;
         """
         record_to_insert = ('test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
         cursor.execute(postgres_insert_query, record_to_insert)
-
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
