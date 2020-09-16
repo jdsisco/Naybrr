@@ -106,8 +106,8 @@ def update_user():
             postgres_get_query = """ SELECT account.accountid, username, email, hashpass, 
             line1, line2, city, state, zip FROM account 
             INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-            WHERE account.accountid = %s; """
-            current_account = ('6')
+            WHERE account.username = %s; """
+            current_account = ('test2',)
             cursor.execute(postgres_get_query, current_account)
             connection.commit()
             count = cursor.rowcount
@@ -174,7 +174,7 @@ def find():
         postgres_get_query = """ SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
         WHERE zip = %s; """
-        search_zip = ('02201')
+        search_zip = ('02201',)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
