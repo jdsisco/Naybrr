@@ -80,7 +80,8 @@ def login():
         else:
             credentials = json.dumps(cursor.fetchall())
             resp = jsonify(success=True)
-            return credentials
+            print (credentials)
+            return resp
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
