@@ -105,8 +105,8 @@ def update_user():
         postgres_get_query = """ SELECT account.accountid, username, email, hashpass, 
         line1, line2, city, state, zip FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE account.accountid = %s; """
-        current_account = ('6')
+        WHERE account.username = %s; """
+        current_account = ('test4')
         cursor.execute(postgres_get_query, current_account)
         connection.commit()
         count = cursor.rowcount
@@ -132,12 +132,12 @@ def update_user():
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_update_query =  """WITH updateneighbor AS (
-            UPDATE account SET accountid = %s, username = %s, email = %s, hashpass = %s WHERE Username = %s
+            UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
             RETURNING accountid)
             UPDATE customeraddress set line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
             WHERE accountid FROM updateneighbor = accountid;"""
         
-        record_to_insert = (current_account, 'test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
+        record_to_insert = ('test4', '6th@testemail.com', 'asdff', 'test4', '48 Lois Lane', empty, 'Warwick','RI','02499')
         cursor.execute(postgres_update_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
