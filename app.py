@@ -102,21 +102,42 @@ def update_user():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-     #   postgres_get_query = 
+        postgres_get_query = 
         """ SELECT account.accountid, username, email, hashpass, 
         line1, line2, city, state, zip FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
         WHERE account.accountid = %s; """
-       # current_account = ('6')
-       # cursor.execute(postgres_get_query, current_account)
-      #  connection.commit()
+        current_account = ('6')
+        cursor.execute(postgres_get_query, current_account)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = json.dumps(cursor.fetchall())
+        resp = jsonify(success=True)
+        print (credentials)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to retrieve record", error)
+            resp = jsonify(success=False)
+            return resp
 
-        postgres_update_query = """ WITH updateneighbor AS (
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+ """           
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        postgres_update_query =  WITH updateneighbor AS (
             UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
             RETURNING accountid)
             UPDATE customeraddress set line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
             WHERE accountid FROM updateneighbor = accountid;
-        """
+        
         record_to_insert = ('test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
         cursor.execute(postgres_update_query, record_to_insert)
         connection.commit()
@@ -128,7 +149,7 @@ def update_user():
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
-            print("Failed to insert record into account table", error)
+            print("Failed to update record", error)
             resp = jsonify(success=False)
             return resp
 
@@ -137,7 +158,7 @@ def update_user():
         if(connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
+            print("PostgreSQL connection is closed")"""
 
 @app.route("/find", methods=["GET","POST"])
 def find_user():
