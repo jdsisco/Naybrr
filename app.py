@@ -76,7 +76,7 @@ def login():
         count = cursor.rowcount
         if count == 0:
             return "<h1>Count is 0</h1>"
-        else
+        else:
             return "<h1>Logged In</h1>"
         """
         print (count, "Record inserted successfully into account table")
