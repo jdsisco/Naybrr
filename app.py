@@ -76,12 +76,12 @@ def login():
         count = cursor.rowcount
         if count == 0:
             resp = jsonify(success=False)
-        else:
-            credentials = cursor.fetchall()
-            resp = jsonify(success=True)
             return resp
+        else:
+            credentials = json.dumps(cursor.fetchall())
+            resp = jsonify(success=True)
+            return credentials
             
-
     except (Exception, psycopg2.Error) as error :
         if(connection):
             print("Failed to insert record into account table", error)
@@ -95,12 +95,12 @@ def login():
 
    
 
-@app.route("/update", methods=["GET"])
+@app.route("/update", methods=["GET","POST"])
 def update_user():
     resp = jsonify(success=True)
     return resp
 
-@app.route("/find", methods=["POST"])
+@app.route("/find", methods=["GET","POST"])
 def find_user():
     resp = jsonify(success=True) #Return Account ID and username
     return resp
