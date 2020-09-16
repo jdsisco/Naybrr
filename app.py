@@ -165,9 +165,6 @@ def update_user():
                 connection.close()
                 print("PostgreSQL connection is closed")
 
-                
-
-@app.route("/find", methods=["GET","POST"])
 def find():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
