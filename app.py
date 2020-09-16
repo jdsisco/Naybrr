@@ -25,21 +25,20 @@ def new_user():
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor;
         """
-        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard', empty, 'Providence','RI','02445')
+        record_to_insert = ('test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
         cursor.execute(postgres_insert_query, record_to_insert)
 
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
-        resp = app.response_class(
-            response=json.dumps(data),
-            status=200,
-            mimetype='application/json')
+        resp = jsonify(cursor.fetchall())
         return resp
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
             print("Failed to insert record into account table", error)
+            resp = jsonify({"accountid":"-1"})
+            return resp
 
     finally:
         #closing database connection.
@@ -86,6 +85,8 @@ def login():
     except (Exception, psycopg2.Error) as error :
         if(connection):
             print("Failed to insert record into account table", error)
+            resp = jsonify(success=False)
+            return resp
 
     finally:
         #closing database connection.
