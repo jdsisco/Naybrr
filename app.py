@@ -13,7 +13,7 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 empty = None
 app = Flask(__name__)
-@app.route("/new", methods=["GET"])
+@app.route("/new", methods=["GET", "POST"])
 def new_user():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -99,8 +99,45 @@ def login():
 
 @app.route("/update", methods=["GET","POST"])
 def update_user():
-    resp = jsonify(success=True)
-    return resp
+        try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+     #   postgres_get_query = 
+        """ SELECT account.accountid, username, email, hashpass, 
+        line1, line2, city, state, zip FROM account 
+        INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
+        WHERE account.accountid = %s; """
+       # current_account = ('6')
+       # cursor.execute(postgres_get_query, current_account)
+      #  connection.commit()
+
+        postgres_update_query = """ WITH updateneighbor AS (
+            UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
+            RETURNING accountid)
+            UPDATE customeraddress set line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
+            WHERE accountid FROM updateneighbor = accountid;
+        """
+        record_to_insert = ('test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
+        cursor.execute(postgres_update_query, record_to_insert)
+        connection.commit()
+        count = cursor.rowcount
+            credentials = json.dumps(cursor.fetchall())
+            resp = jsonify(success=True)
+            print (credentials)
+            return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to insert record into account table", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
 
 @app.route("/find", methods=["GET","POST"])
 def find_user():
@@ -131,22 +168,6 @@ def delete_item():
 def find_item():
     resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath (single?)
     return resp
-"""
-
-@app.route("/submit", methods=["POST"])
-def post_to_db():
-    indata = DataTest(request.form['mydata'])
-    data = copy(indata. __dict__ )
-    del data["_sa_instance_state"]
-    try:
-        db.session.add(indata)
-        db.session.commit()
-    except Exception as e:
-        print("\n FAILED entry: {}\n".format(json.dumps(data)))
-        print(e)
-        sys.stdout.flush()
-    return 'Success! To enter more data, <a href="{}">click here!</a>'.format(url_for("enter_data"))
-"""
 
 @app.route('/test')
 def index():
