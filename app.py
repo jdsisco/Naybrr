@@ -74,8 +74,10 @@ def login():
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
-        if count == 0
+        if count == 0:
             return "<h1>Count is 0</h1>"
+        else
+            return "<h1>Logged In</h1>"
         """
         print (count, "Record inserted successfully into account table")
         resp = app.response_class(
