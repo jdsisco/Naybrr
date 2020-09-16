@@ -235,7 +235,7 @@ def delete_item():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_delete_query = """DELETE FROM inventory WHERE itemid itemid = %s;"""
+        postgres_delete_query = """DELETE FROM inventory WHERE itemid = %s;"""
         delete_item = ('3')
         cursor.execute(postgres_delete_query, delete_item)
         connection.commit()
