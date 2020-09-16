@@ -75,7 +75,7 @@ def login():
         connection.commit()
         count = cursor.rowcount
         if count == 0
-        return "<h1>Count is 0</h1>"
+            return "<h1>Count is 0</h1>"
         """
         print (count, "Record inserted successfully into account table")
         resp = app.response_class(
