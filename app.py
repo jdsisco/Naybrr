@@ -102,8 +102,7 @@ def update_user():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = 
-        """ SELECT account.accountid, username, email, hashpass, 
+        postgres_get_query = """ SELECT account.accountid, username, email, hashpass, 
         line1, line2, city, state, zip FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
         WHERE account.accountid = %s; """
