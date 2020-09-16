@@ -70,7 +70,7 @@ def login():
         
         postgres_insert_query = """  SELECT username FROM account where username = %s AND hashpass = %s;
         """
-        record_to_insert = ('test5', 'asdf4f')
+        record_to_insert = ('test4', 'asdff')
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
