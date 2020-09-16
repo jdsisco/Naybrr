@@ -200,13 +200,15 @@ def add_item():
             INSERT INTO inventory (accountid, itemname, price, quantity, imagepath, description) 
             VALUES (%s,%s,%s,%s,%s,%s)
             RETURNING itemid, accountid)
-            SELECT username from newitem;
+            SELECT itemid, accountid from newitem;
         """
         insert_item = ('3', 'Salt', '1.50','2', empty, 'This is salt.')
         cursor.execute(postgres_item_query, insert_item)
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted as new item")
+        credentials = json.dumps(cursor.fetchall())
+        print (credentials)
         resp = jsonify(success=True)
         return resp
 
@@ -230,8 +232,31 @@ def update_item():
 
 @app.route("/delete",methods=["POST"])
 def delete_item():
-    resp = jsonify(success=True)
-    return resp
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        
+        postgres_delete_query = """DELETE FROM inventory WHERE itemid itemid = %s;"""
+        delete_item = ('3')
+        cursor.execute(postgres_delete_query, delete_item)
+        connection.commit()
+        count = cursor.rowcount
+        print (count, "Item deleted")
+        resp = jsonify(success=True)
+        return resp
+
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to delete item", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
 
 @app.route("/item",methods=["GET"])
 def find_item():
