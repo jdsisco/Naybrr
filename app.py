@@ -99,7 +99,7 @@ def login():
 
 @app.route("/update", methods=["GET","POST"])
 def update_user():
-        try:
+    try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
      #   postgres_get_query = 
