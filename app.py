@@ -126,8 +126,8 @@ def update_user():
         if(connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")
- """           
+            print("PostgreSQL connection is closed")"""
+          
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
