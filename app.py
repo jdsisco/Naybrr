@@ -230,12 +230,11 @@ def update_item():
     resp = jsonify(success=True)
     return resp
 
-@app.route("/delete",methods=["POST"])
+@app.route("/delete",methods=["GET","POST"])
 def delete_item():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        
         postgres_delete_query = """DELETE FROM inventory WHERE itemid itemid = %s;"""
         delete_item = ('3')
         cursor.execute(postgres_delete_query, delete_item)
