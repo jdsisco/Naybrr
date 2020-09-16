@@ -166,8 +166,6 @@ def update_user():
                 print("PostgreSQL connection is closed")
 
 @app.route("/find", methods=["GET","POST"])
-def find():
-    return "<h1>test</h1>"
                 
 @app.route("/nearby",methods=["POST"])
 def user_inventory():
