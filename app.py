@@ -13,7 +13,7 @@ DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 empty = None
 app = Flask(__name__)
-@app.route("/new", methods=["GET"])
+@app.route("/new", methods=["GET, POST"])
 def new_user():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -25,7 +25,7 @@ def new_user():
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor;
         """
-        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard',empty, 'Providence','RI','02445')
+        record_to_insert = ('test4', '4th@email.com', 'asdff','3 NEIT Boulevard', empty, 'Providence','RI','02445')
         cursor.execute(postgres_insert_query, record_to_insert)
 
         connection.commit()
@@ -62,8 +62,39 @@ def new_user():
     "id": 42
 }"""
 
-@app.route("/login", methods=["GET"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        
+        postgres_insert_query = """  SELECT username FROM account where username = '%s' AND hashpass = '%s';
+        """
+        record_to_insert = ('test5', 'asdf4f')
+        cursor.execute(postgres_insert_query, record_to_insert)
+        connection.commit()
+        count = cursor.rowcount
+        if count == 0
+        return "<h1>Count is 0</h1>"
+        """
+        print (count, "Record inserted successfully into account table")
+        resp = app.response_class(
+            response=json.dumps(data),
+            status=200,
+            mimetype='application/json')
+        return resp"""
+
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to insert record into account table", error)
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+
     resp = jsonify(success=True)
     return resp
 
