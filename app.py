@@ -128,16 +128,16 @@ def update_user():
             connection.close()
             print("PostgreSQL connection is closed")
           
-    """try:
+    try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_update_query =  WITH updateneighbor AS (
-            UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
+        postgres_update_query =  """WITH updateneighbor AS (
+            UPDATE account SET accountid = %s, username = %s, email = %s, hashpass = %s WHERE Username = %s
             RETURNING accountid)
             UPDATE customeraddress set line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
-            WHERE accountid FROM updateneighbor = accountid;
+            WHERE accountid FROM updateneighbor = accountid;"""
         
-        record_to_insert = ('test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
+        record_to_insert = (current_account, 'test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
         cursor.execute(postgres_update_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
@@ -157,7 +157,7 @@ def update_user():
         if(connection):
             cursor.close()
             connection.close()
-            print("PostgreSQL connection is closed")"""
+            print("PostgreSQL connection is closed")
 
 @app.route("/find", methods=["GET","POST"])
 def find_user():
