@@ -13,16 +13,6 @@ import decimal
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-class MyJSONEncoder(flask.json.JSONEncoder):
-
-    def default(self, obj):
-        if isinstance(obj, decimal.Decimal):
-            # Convert decimal instances to strings.
-            return str(obj)
-        return super(MyJSONEncoder, self).default(obj)
-
-app = flask.Flask(...)
-app.json_encoder = MyJSONEncoder
 empty = None
 app = Flask(__name__)
 @app.route("/new", methods=["GET", "POST"])
