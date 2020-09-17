@@ -107,9 +107,9 @@ def update_user():
             hashpass = (select hashpass from update_values) WHERE Username = 
             (select username from update_values) 
             RETURNING *)
-            UPDATE customeraddress SET line1 = update_values.line1, 
-            line2 = update_values.line2, city = update_values.city, 
-            state = update_values.state, zip = update_values.zip 
+            UPDATE customeraddress SET line1 = (select line1 from update_values), 
+            line2 = (select line2 from update_values), city = (select city from update_values), 
+            state = (select state from update_values), zip = (select zip from update_values)
             WHERE accountid = (select accountid from updateneighbor);"""
             record_to_update = ('test4', '6th@testemail.com', 'asdff', '48 Lois Lane', empty, 'Warwick','RI','02499')
             cursor.execute(postgres_update_query, record_to_update)
