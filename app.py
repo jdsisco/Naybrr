@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, make_response, render_template, url_for, json
+from flask import Flask, request, jsonify, make_response, render_template, url_for, flask.json
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import ModelSchema
 from marshmallow import fields
@@ -21,6 +21,8 @@ class MyJSONEncoder(flask.json.JSONEncoder):
             return str(obj)
         return super(MyJSONEncoder, self).default(obj)
 
+app = flask.Flask(...)
+app.json_encoder = MyJSONEncoder
 empty = None
 app = Flask(__name__)
 @app.route("/new", methods=["GET", "POST"])
