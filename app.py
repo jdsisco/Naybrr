@@ -13,7 +13,7 @@ import decimal
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-class MyJSONEncoder(flask.json.JSONEncoder):
+class MyJSONEncoder(json.JSONEncoder):
 
     def default(self, obj):
         if isinstance(obj, decimal.Decimal):
