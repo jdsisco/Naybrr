@@ -99,11 +99,18 @@ def update_user():
             connection.commit()
             count = cursor.rowcount
             credentials = json.dumps(cursor.fetchall())
-            postgres_update_query =  """WITH updateneighbor AS (
-            UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
-            RETURNING accountid)
-            UPDATE customeraddress SET line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
-            WHERE accountid FROM updateneighbor = accountid;"""
+            postgres_update_query =  """WITH update_values (username, email, hashpass, line1, line2, city, state, zip) AS (
+            values (%s,%s,%s,%s,%s,%s,%s,%s),
+            updateneighbor as (
+            UPDATE account SET username = (Select username from update_values), 
+            email = (Select email from update_values), 
+            hashpass = (select hashpass_from update_values) WHERE Username = 
+            (select username from update_values) 
+            RETURNING *)
+            UPDATE customeraddress SET line1 = update_values.line1, 
+            line2 = update_values.line2, city = update_values.city, 
+            state = update_values.state, zip = update_values.zip 
+            WHERE accountid = (select accountid from updateneighbor);"""
             record_to_update = ('test4', '6th@testemail.com', 'asdff', 'test4', '48 Lois Lane', empty, 'Warwick','RI','02499')
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
