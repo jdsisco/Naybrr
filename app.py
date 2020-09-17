@@ -346,7 +346,7 @@ def find_item():
 
 @app.route('/search')
 def search_item():
-        try:
+    try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT username, itemid, itemname, price, quantity, imagepath, description FROM account 
