@@ -20,9 +20,9 @@ class MyJSONEncoder(flask.json.JSONEncoder):
             # Convert decimal instances to strings.
             return str(obj)
         return super(MyJSONEncoder, self).default(obj)
-        
+
 empty = None
-app = flask.Flask(...)
+app = Flask(...)
 app.json_encoder = MyJSONEncoder
 app = Flask(__name__)
 @app.route("/new", methods=["GET", "POST"])
