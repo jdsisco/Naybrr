@@ -104,7 +104,7 @@ def update_user():
             updateneighbor as (
             UPDATE account SET username = (Select username from update_values), 
             email = (Select email from update_values), 
-            hashpass = (select hashpass_from update_values) WHERE Username = 
+            hashpass = (select hashpass from update_values) WHERE Username = 
             (select username from update_values) 
             RETURNING *)
             UPDATE customeraddress SET line1 = update_values.line1, 
