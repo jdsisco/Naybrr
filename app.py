@@ -48,7 +48,6 @@ def new_user():
             connection.close()
             print("PostgreSQL connection is closed")
 
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     try:
@@ -83,7 +82,6 @@ def login():
             connection.close()
             print("PostgreSQL connection is closed")
 
-   
 @app.route("/update", methods=["GET","POST"])
 def update_user():
     try:
@@ -135,7 +133,6 @@ def update_user():
         xconn = jsonify(success=False)
         return xconn
                 
-
 @app.route("/find", methods=["GET","POST"])
 def find():
     try:
@@ -165,7 +162,6 @@ def find():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
-
 
 @app.route("/nearby",methods=["GET","POST"])
 def find_user():
@@ -361,7 +357,7 @@ def search_item():
         inner join customeraddress using (accountid)
         where itemname ILIKE %s or description ILIKE %s;"""
         search_item = ('su','su')
-        ilike_pattern = "%{}%".format(search_item)
+        ilike_pattern = "%%{}%%".format(search_item)
         cursor.execute(postgres_get_query, ilike_pattern)
         connection.commit()
         count = cursor.rowcount
