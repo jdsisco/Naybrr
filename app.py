@@ -187,7 +187,7 @@ def find():
 
 @app.route("/nearby",methods=["GET","POST"])
 def find_user():
-        try:
+    try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT username, accountid FROM account
@@ -252,7 +252,7 @@ def add_item():
 
 @app.route("/neighbor",methods=["GET","POST"])
 def neighbor():
-        try:
+    try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
