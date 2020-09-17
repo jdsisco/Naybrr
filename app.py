@@ -277,8 +277,6 @@ def update_item():
         connection.commit()
         count = cursor.rowcount
         print (count, "Updated item")
-        credentials = json.dumps(cursor.fetchall())
-        print (credentials)
         resp = jsonify(success=True)
         return resp
 
