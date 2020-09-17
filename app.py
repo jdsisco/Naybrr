@@ -355,7 +355,7 @@ def search_item():
         where itemname ILIKE %s or description ILIKE %s;"""
         search_item = ('su','su')
         ilike_pattern = '%{}%'.format(search_item)
-        cursor.execute(postgres_get_query, (ilike_pattern,))
+        cursor.execute(postgres_get_query, ilike_pattern)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
