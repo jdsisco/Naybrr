@@ -353,7 +353,7 @@ def search_item():
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
         where itemname ILIKE %s or description ILIKE %s;"""
-        search_item = 'su','su'
+        search_item = 'su'
         ilike_pattern = "%{}%".format(search_item)
         cursor.execute(postgres_get_query, ilike_pattern)
         connection.commit()
