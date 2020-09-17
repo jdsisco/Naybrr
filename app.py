@@ -94,8 +94,18 @@ def update_user():
             line1, line2, city, state, zip FROM account 
             INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
             WHERE account.username = %s; """
-            current_account = ('test2',)
+            current_account = ('test4',)
             cursor.execute(postgres_get_query, current_account)
+            connection.commit()
+            count = cursor.rowcount
+            credentials = json.dumps(cursor.fetchall())
+            postgres_update_query =  """WITH updateneighbor AS (
+            UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
+            RETURNING accountid)
+            UPDATE customeraddress SET line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
+            WHERE accountid FROM updateneighbor = accountid;"""
+            record_to_update = ('test4', '6th@testemail.com', 'asdff', 'test4', '48 Lois Lane', empty, 'Warwick','RI','02499')
+            cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
             credentials = json.dumps(cursor.fetchall())
@@ -353,7 +363,7 @@ def search_item():
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
         where itemname ILIKE %s or description ILIKE %s;"""
-        search_item = 'su'
+        search_item = ('su','su')
         ilike_pattern = "%{}%".format(search_item)
         cursor.execute(postgres_get_query, ilike_pattern)
         connection.commit()
