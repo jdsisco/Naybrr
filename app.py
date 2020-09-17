@@ -111,7 +111,7 @@ def update_user():
             line2 = update_values.line2, city = update_values.city, 
             state = update_values.state, zip = update_values.zip 
             WHERE accountid = (select accountid from updateneighbor);"""
-            record_to_update = ('test4', '6th@testemail.com', 'asdff', 'test4', '48 Lois Lane', empty, 'Warwick','RI','02499')
+            record_to_update = ('test4', '6th@testemail.com', 'asdff', '48 Lois Lane', empty, 'Warwick','RI','02499')
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
