@@ -22,7 +22,6 @@ class MyJSONEncoder(flask.json.JSONEncoder):
         return super(MyJSONEncoder, self).default(obj)
 
 empty = None
-app.json_encoder = MyJSONEncoder
 app = Flask(__name__)
 @app.route("/new", methods=["GET", "POST"])
 def new_user():
