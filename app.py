@@ -8,7 +8,6 @@ import json
 import os
 import psycopg2
 from psycopg2 import Error
-import decimal
 
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
