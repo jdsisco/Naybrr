@@ -134,39 +134,6 @@ def update_user():
         print("Failed to connect")
         xconn = jsonify(success=False)
         return xconn
-
-#Need to connect update status with pulled account information.
-    """try:        
-        try:
-            connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-            cursor = connection.cursor()
-            postgres_update_query =  WITH updateneighbor AS (
-                UPDATE account SET username = %s, email = %s, hashpass = %s WHERE Username = %s
-                RETURNING accountid)
-                UPDATE customeraddress SET line1 = %s, line2 = %s, city = %s, state = %s, zip = %s 
-                WHERE accountid FROM updateneighbor = accountid;
-            
-            record_to_insert = ('test4', '6th@testemail.com', 'asdff', 'test4', '48 Lois Lane', empty, 'Warwick','RI','02499')
-            cursor.execute(postgres_update_query, record_to_insert)
-            connection.commit()
-            count = cursor.rowcount
-            credentials = json.dumps(cursor.fetchall())
-            resp = jsonify(success=True)
-            print (credentials)
-            return resp
-                
-        except (Exception, psycopg2.Error) as error :
-            if(connection):
-                print("Failed to update record", error)
-                resp = jsonify(success=False)
-                return resp
-
-        finally:
-            #closing database connection.
-            if(connection):
-                cursor.close()
-                connection.close()
-                print("PostgreSQL connection is closed")"""
                 
 
 @app.route("/find", methods=["GET","POST"])
@@ -298,8 +265,35 @@ def neighbor():
 
 @app.route("/updateItem",methods=["GET","POST"])
 def update_item():
-    resp = jsonify(success=True)
-    return resp
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        
+        postgres_update_query =  """UPDATE inventory SET itemname = %s, price = %s, quantity = %s,
+            imagepath = %s, description = %s 
+            WHERE accountid = %s and itemid = %s;"""
+        insert_item = ('Ketchup', '4.28', '1','https://cat.chup', 'Red sauce', '3','7')
+        cursor.execute(postgres_item_query, insert_item)
+        connection.commit()
+        count = cursor.rowcount
+        print (count, "Updated item")
+        credentials = json.dumps(cursor.fetchall())
+        print (credentials)
+        resp = jsonify(success=True)
+        return resp
+
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to update item", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
 
 @app.route("/delete",methods=["GET","POST"])
 def delete_item():
@@ -359,7 +353,7 @@ def find_item():
             connection.close()
             print("PostgreSQL connection is closed")
 
-@app.route('/search')
+@app.route('/search',methods=["GET","POST"])
 def search_item():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -391,9 +385,13 @@ def search_item():
             connection.close()
             print("PostgreSQL connection is closed")
 
+@app.route('/order')
+def order_item():
+    return "Order Item here"
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
     #To-do:
-    #Connect update status with pulled account information (Users and items)
     #Update Item database call
+    #Order Item
