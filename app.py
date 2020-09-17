@@ -100,7 +100,7 @@ def update_user():
             count = cursor.rowcount
             credentials = json.dumps(cursor.fetchall())
             postgres_update_query =  """WITH update_values (username, email, hashpass, line1, line2, city, state, zip) AS (
-            values (%s,%s,%s,%s,%s,%s,%s,%s),
+            values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
             UPDATE account SET username = (Select username from update_values), 
             email = (Select email from update_values), 
