@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, make_response, render_template, url_for
+from flask import Flask, request, jsonify, make_response, render_template, url_for, json
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import ModelSchema
 from marshmallow import fields
@@ -8,10 +8,22 @@ import json
 import os
 import psycopg2
 from psycopg2 import Error
+import decimal
 
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
+class MyJSONEncoder(flask.json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj, decimal.Decimal):
+            # Convert decimal instances to strings.
+            return str(obj)
+        return super(MyJSONEncoder, self).default(obj)
+        
 empty = None
+app = flask.Flask(...)
+app.json_encoder = MyJSONEncoder
 app = Flask(__name__)
 @app.route("/new", methods=["GET", "POST"])
 def new_user():
