@@ -273,7 +273,7 @@ def update_item():
             imagepath = %s, description = %s 
             WHERE accountid = %s and itemid = %s;"""
         insert_item = ('Ketchup', '4.28', '1','https://cat.chup', 'Red sauce', '3','7')
-        cursor.execute(postgres_item_query, insert_item)
+        cursor.execute(postgres_update_query, insert_item)
         connection.commit()
         count = cursor.rowcount
         print (count, "Updated item")
