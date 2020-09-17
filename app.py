@@ -257,10 +257,37 @@ def delete_item():
             connection.close()
             print("PostgreSQL connection is closed")
 
-@app.route("/item",methods=["GET"])
+@app.route("/item",methods=["GET", "POST"])
 def find_item():
-    resp = jsonify(success=True) #Return itemID, name, description, price, quantity, imagePath (single?)
-    return resp
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        postgres_get_query = """ SELECT username, itemid, itemname, price, quantity, imagepath, description FROM account 
+        INNER JOIN inventory USING (accountid)
+        INNER JOIN customeraddress USING (accountid) 
+        WHERE customeraddress.zip = %s; """
+        search_zip = ('02201',)
+        cursor.execute(postgres_get_query, search_zip)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = json.dumps(cursor.fetchall())
+        resp = jsonify(success=True)
+        print (credentials)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to find zip code", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+    #Return itemID, name, description, price, quantity, imagePath (single?)
 
 @app.route('/test')
 def index():
@@ -268,3 +295,9 @@ def index():
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
+
+    #To-do:
+    #Connect update status with pulled account information
+    #Search for Items
+    #Item search by zip code
+    #Update Item database call
