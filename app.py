@@ -352,7 +352,7 @@ def search_item():
         postgres_get_query = """Select account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
-        where itemname ILIKE %s or itemname ILIKE %%%s%% or description ILIKE %%%s%%;"""
+        where itemname ILIKE %s or itemname ILIKE %s%% or description ILIKE %s%%;"""
         search_item = ('su','su','su')
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
