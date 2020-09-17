@@ -349,12 +349,12 @@ def search_item():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """ SELECT username, itemid, itemname, price, quantity, imagepath, description FROM account 
-        INNER JOIN inventory USING (accountid)
-        INNER JOIN customeraddress USING (accountid) 
-        WHERE customeraddress.zip = %s; """
-        search_zip = ('02201',)
-        cursor.execute(postgres_get_query, search_zip)
+        postgres_get_query = """Select account.accountid, itemname, itemid, price, quantity, imagepath, description from account
+        inner join inventory using (accountid)
+        inner join customeraddress using (accountid)
+        where itemname ILIKE %s or itemname ILIKE '%%%s%%' or description ILIKE '%%%s%%';"""
+        search_item = ('su','su','su')
+        cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
