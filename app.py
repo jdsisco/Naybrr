@@ -90,6 +90,15 @@ def update_user():
         try:
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
+            postgres_get_query = """ SELECT account.accountid, username, email, hashpass, 
+            line1, line2, city, state, zip FROM account 
+            INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
+            WHERE account.username = %s; """
+            current_account = ('test4',)
+            cursor.execute(postgres_get_query, current_account)
+            connection.commit()
+            count = cursor.rowcount
+            credentials = json.dumps(cursor.fetchall())
             postgres_update_query =  """WITH update_values (username, email, hashpass, line1, line2, city, state, zip) AS (
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
