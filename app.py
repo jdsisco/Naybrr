@@ -301,5 +301,4 @@ if __name__ == '__main__':
     #To-do:
     #Connect update status with pulled account information
     #Search for Items
-    #Item search by zip code
     #Update Item database call
