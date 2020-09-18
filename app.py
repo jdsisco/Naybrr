@@ -96,17 +96,16 @@ def login():
 def update_user():
     try:
         try:
+            username = request.args.get("username")
+            email = request.args.get("email")
+            password = request.args.get("password")
+            line1 = request.args.get("line1")
+            line2 = request.args.get("line2")
+            city = request.args.get("city")
+            state = request.args.get("state")
+            zip = request.args.get("zip")
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
-            postgres_get_query = """ SELECT account.accountid, username, email, hashpass, 
-            line1, line2, city, state, zip FROM account 
-            INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-            WHERE account.username = %s; """
-            current_account = ('test4',)
-            cursor.execute(postgres_get_query, current_account)
-            connection.commit()
-            count = cursor.rowcount
-            credentials = json.dumps(cursor.fetchall())
             postgres_update_query =  """WITH update_values (username, email, hashpass, line1, line2, city, state, zip) AS (
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
@@ -119,7 +118,7 @@ def update_user():
             line2 = (select line2 from update_values), city = (select city from update_values), 
             state = (select state from update_values), zip = (select zip from update_values)
             WHERE accountid = (select accountid from updateneighbor);"""
-            record_to_update = ('test4', '6th@testemail.com', 'asdff', '48 Lois Lane', empty, 'Warwick','RI','02499')
+            record_to_update = (username, email, password, line1, line2, city,state,zip)
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
@@ -146,12 +145,14 @@ def update_user():
 @app.route("/find", methods=["GET","POST"])
 def find():
     try:
+        username = request.args.get("search")
+        zip = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE zip = %s; """
-        search_zip = ('02201',)
+        WHERE username = %s and zip = %s; """
+        search_zip = (username, zip)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
@@ -176,12 +177,13 @@ def find():
 @app.route("/nearby",methods=["GET","POST"])
 def find_user():
     try:
+        zip = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT username, accountid FROM account
         INNER JOIN customeraddress USING (accountid) 
         WHERE customeraddress.zip = %s; """
-        search_zip = ('02201',)
+        search_zip = (zip,)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
