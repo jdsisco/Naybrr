@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, make_response, render_template, url_for, json, requests
+from flask import Flask, request, jsonify, make_response, render_template, url_for, json
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import ModelSchema
 from marshmallow import fields
