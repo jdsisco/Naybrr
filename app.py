@@ -262,7 +262,7 @@ def neighbor():
         connection.commit()
         count = cursor.rowcount
         credentials = cursor.fetchall()
-        resp = jsonify(credentials))
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
@@ -455,4 +455,4 @@ if __name__ == '__main__':
     #To-do:
     #Search Item improvement (if time permits)
     #Order Item
-    #add to cart 
+    #add to cart
