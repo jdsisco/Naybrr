@@ -51,8 +51,8 @@ def new_user():
     except (Exception, psycopg2.Error) as error :
         if(connection):
             print("Failed to insert record into account table", error)
-            resp = jsonify({"accountid":"-1"})
-            return resp
+            #resp = jsonify({"accountid":"-1"})
+            #return resp
 
     finally:
         #closing database connection.
