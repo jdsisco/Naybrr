@@ -42,12 +42,6 @@ def new_user():
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
         credentials = cursor.fetchall()
-        #print (credentials)
-        #results = []
-        #columns = ('username')
-        #for row in credentials:
-        #    results.append(dict(zip(columns, row)))
-        #print (json.dumps(credentials))
         resp = jsonify(success=True)
         return jsonify(credentials)
 
@@ -156,7 +150,7 @@ def find():
         username = request.args.get("search")
         zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """ select row_to_json (find) 
         from (SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
@@ -165,8 +159,7 @@ def find():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        resp = response.json(cursor.fetchall())
-        #resp = jsonify(credentials)
+        resp = jsonify(credentials)
         #print (credentials)
         return resp
             
