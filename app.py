@@ -480,5 +480,4 @@ def order_info():
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
-    #To-do:
-    #Order Item
+   
