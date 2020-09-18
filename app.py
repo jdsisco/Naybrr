@@ -33,8 +33,8 @@ def new_user():
             RETURNING accountid, username), newaddress as (
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor) 
-            select row_to_json (user) 
-            from (SELECT username from neighbor) as user);
+            select row_to_json (row) 
+            from (SELECT username from neighbor) as row);
         """
         record_to_insert = (username, email, password, line1, line2, city,state,zip)
         cursor.execute(postgres_insert_query, record_to_insert)
