@@ -158,7 +158,7 @@ def find():
         count = cursor.rowcount
         resp = json.dumps(cursor.fetchall())
         #resp = jsonify(credentials)
-        print (credentials)
+        #print (credentials)
         return resp
             
     except (Exception, psycopg2.Error) as error :
