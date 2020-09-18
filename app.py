@@ -151,10 +151,9 @@ def find():
         zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
-        postgres_get_query = """ select row_to_json (find) 
-        from (SELECT account.accountid, username FROM account 
+        postgres_get_query = """SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE account.username ilike %s and customeraddress.zip = %s) find; """
+        WHERE account.username ilike %s and customeraddress.zip = %s; """
         search_zip = (username, zipcode)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
