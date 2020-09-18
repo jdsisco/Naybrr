@@ -253,10 +253,10 @@ def neighbor():
         accountid = request.args.get("accountid")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM inventory
-        INNER JOIN account USING (accountid)
+        postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
+        INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE account.username ilike %s; """
+        WHERE account.username ilike '%s'; """
         search_user = (username,)
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
@@ -282,13 +282,20 @@ def neighbor():
 @app.route("/updateItem",methods=["GET","POST"])
 def update_item():
     try:
+        accountid = request.args.get("accountId")
+        itemid = request.args.get("itemId")
+        itemname = request.args.get("itemName")
+        price = request.args.get("Price")
+        quantity = request.args.get("quantity")
+        imagepath = request.args.get("imgPath")
+        description = request.args.get("description")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
         postgres_update_query =  """UPDATE inventory SET itemname = %s, price = %s, quantity = %s,
             imagepath = %s, description = %s 
             WHERE accountid = %s and itemid = %s;"""
-        insert_item = ('Ketchup', '4.28', '1','https://cat.chup', 'Red sauce', '3','7')
+        insert_item = (itemname, price, quantity, imagepath, description, accountid, itemid)
         cursor.execute(postgres_update_query, insert_item)
         connection.commit()
         count = cursor.rowcount
