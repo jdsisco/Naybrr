@@ -43,6 +43,7 @@ def new_user():
         credentials = cursor.fetchall()
         print (credentials)
         resp = jsonify(success=True)
+        row_headers=[x[0] for x in cur.description] 
         json_data=[]
         for result in credentials:
             json_data.append(dict(zip(row_headers,result)))
