@@ -392,7 +392,7 @@ def search_item():
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(success=True)
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
