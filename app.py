@@ -27,7 +27,7 @@ def new_user():
             SELECT accountid,%s,%s,%s,%s,%s from neighbor) 
             SELECT username from neighbor;
         """
-        record_to_insert = (name, email, password, addr1, addr2, city,state,zip)
+        record_to_insert = (username, email, password, line1, line2, city,state,zip)
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
