@@ -318,10 +318,11 @@ def update_item():
 @app.route("/delete",methods=["GET","POST"])
 def delete_item():
     try:
+        itemid = request.args.get("itemId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_delete_query = """DELETE FROM inventory WHERE itemid = %s;"""
-        delete_item = ('3')
+        delete_item = (itemid,)
         cursor.execute(postgres_delete_query, delete_item)
         connection.commit()
         count = cursor.rowcount
