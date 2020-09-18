@@ -249,18 +249,19 @@ def add_item():
 @app.route("/neighbor",methods=["GET","POST"])
 def neighbor():
     try:
+        username = request.args.get("username")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE account.username = %s; """
-        search_user = ('Jam',)
+        WHERE account.username ilike %s; """
+        search_user = (username,)
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(success=True)
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
