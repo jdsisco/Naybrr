@@ -160,7 +160,7 @@ def find():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        resp = jsonify(cursor.fetchall())
+        resp = response.json(cursor.fetchall())
         #resp = jsonify(credentials)
         #print (credentials)
         return resp
