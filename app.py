@@ -42,7 +42,7 @@ def new_user():
         print (count, "Record inserted successfully into account table")
         credentials = cursor.fetchall()
         print (credentials)
-        resp = jsonify(success=True())
+        resp = jsonify(success=True)
         json_data=[]
         for result in rv:
             json_data.append(dict(zip(row_headers,result)))
@@ -51,8 +51,8 @@ def new_user():
     except (Exception, psycopg2.Error) as error :
         if(connection):
             print("Failed to insert record into account table", error)
-            #resp = jsonify({"accountid":"-1"})
-            #return resp
+            resp = jsonify({"accountid":"-1"})
+            return resp
 
     finally:
         #closing database connection.
