@@ -449,19 +449,14 @@ def order_item():
 @app.route('/status',methods=["GET","POST"])
 def order_info():
     try:
-        orderid = request.args.get("accountId")
-        itemid = request.args.get("itemId")
-        quantity = request.args.get("quantity")
+        orderid = request.args.get("orderId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_order_query = """with order_info as (
-        select 
-        RETURNING *), newquantity as (
-        UPDATE inventory SET quantity = quantity - %s where itemid = %s returning *) 
-        INSERT into ordereditems (itemid, orderid, quantity) values
-        ((select itemid from newquantity), (select orderid from current_order),
-        (%s));"""
-        order_item = (accountid,quantity,itemid,quantity)
+        select orderid, itemid, itemname, price, ordereditems.quantity, orders.accountid, dateordered from ordereditems
+        inner join orders using (orderid)
+        inner join inventory using (itemid) where orderid = %s;"""
+        order_item = (orderid,)
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
         count = cursor.rowcount
