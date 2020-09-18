@@ -180,7 +180,7 @@ def find_user():
         zip = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """ SELECT username, accountid FROM account
+        postgres_get_query = """ SELECT accountid, username FROM account
         INNER JOIN customeraddress USING (accountid) 
         WHERE customeraddress.zip = %s; """
         search_zip = (zip,)
@@ -208,6 +208,12 @@ def find_user():
 @app.route("/newItem",methods=["GET","POST"])
 def add_item():
     try:
+        accountid = request.args.get("accountId")
+        itemname = request.args.get("itemName")
+        price = request.args.get("Price")
+        quantity = request.args.get("quantity")
+        imagepath = request.args.get("imgPath")
+        description = request.args.get("description")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
@@ -217,7 +223,7 @@ def add_item():
             RETURNING itemid, accountid)
             SELECT itemid, accountid from newitem;
         """
-        insert_item = ('3', 'Salt', '1.50','2', empty, 'This is salt.')
+        insert_item = (accountid, itemname, price, quantity, imagepath, description)
         cursor.execute(postgres_item_query, insert_item)
         connection.commit()
         count = cursor.rowcount
