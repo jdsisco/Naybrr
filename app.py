@@ -41,8 +41,8 @@ def new_user():
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
-        credentials = cursor.fetchall()
-        print (credentials)
+        #credentials = cursor.fetchall()
+        #print (credentials)
         resp = jsonify(success=True())
         return resp
 
