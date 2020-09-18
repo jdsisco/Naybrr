@@ -28,19 +28,21 @@ def new_user():
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
-        postgres_insert_query = """ select row_to_json (user) 
-            from (WITH neighbor AS (
+        postgres_insert_query = """ (WITH neighbor AS (
             INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)
             RETURNING accountid, username), newaddress as (
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor) 
-            SELECT username from neighbor) user;
+            select row_to_json (user) 
+            from (SELECT username from neighbor) user);
         """
         record_to_insert = (username, email, password, line1, line2, city,state,zip)
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
+        credentials = jsonify(cursor.fetchall())
+        print (credentials)
         resp = jsonify(success=True())
         return resp
 
