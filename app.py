@@ -17,6 +17,14 @@ app = Flask(__name__)
 @app.route("/new", methods=["GET", "POST"])
 def new_user():
     try:
+        username = request.args.get("username")
+        email = request.args.get("email")
+        password = request.args.get("password")
+        line1 = request.args.get("line1")
+        line2 = request.args.get("line2")
+        city = request.args.get("city")
+        state = request.args.get("state")
+        zip = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
