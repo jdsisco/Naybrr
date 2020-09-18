@@ -157,14 +157,14 @@ def find():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        resp = request.json[cursor.fetchall()]
+        resp = json.stringify(cursor.fetchall())
         #resp = jsonify(credentials)
         #print (credentials)
         return resp
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
-            print("Failed to find zip code", error)
+            print("Failed to find users in zip code", error)
             resp = jsonify(success=False)
             return resp
 
