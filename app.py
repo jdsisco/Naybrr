@@ -43,11 +43,9 @@ def new_user():
         credentials = cursor.fetchall()
         print (credentials)
         resp = jsonify(success=True)
-        row_headers=[x[0] for x in connection.description] 
-        json_data=[]
-        for result in credentials:
-            json_data.append(dict(zip(row_headers,result)))
-        return json.dumps(json_data)
+        r = [dict((cursor.description[i][0], value) \
+               for i, value in enumerate(row)) for row in cursor.fetchall()]
+        return (r[0] if r else None) if one else r
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
