@@ -157,7 +157,7 @@ def find():
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(success=True)
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
@@ -188,7 +188,7 @@ def find_user():
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(success=True)
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
