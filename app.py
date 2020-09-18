@@ -386,10 +386,10 @@ def search_item():
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
-        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s;"""
+        where (itemname ILIKE %%%s%% or description ILIKE %%%s%%) AND zip = %s;"""
         search_item = (itemname, description, zip)
-        ilike_pattern = "%{}%".format(search_item)
-        cursor.execute(postgres_get_query, ilike_pattern)
+        #ilike_pattern = "%{}%".format(search_item)
+        cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
