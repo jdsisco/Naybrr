@@ -40,7 +40,7 @@ def new_user():
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
-        resp = jsonify(cursor.fetchall())
+        resp = jsonify(success=True())
         return resp
 
     except (Exception, psycopg2.Error) as error :
