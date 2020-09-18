@@ -27,7 +27,7 @@ def new_user():
             SELECT accountid,%s,%s,%s,%s,%s from neighbor) 
             SELECT username from neighbor;
         """
-        record_to_insert = ('test6', '6th@testemail.com', '998','48 Lois Lane', empty, 'Warwick','RI','02499')
+        record_to_insert = (name, email, password, addr1, addr2, city,state,zip)
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
@@ -237,8 +237,8 @@ def neighbor():
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
         WHERE account.username = %s; """
-        search_zip = ('Jam',)
-        cursor.execute(postgres_get_query, search_zip)
+        search_user = ('Jam',)
+        cursor.execute(postgres_get_query, search_user)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
@@ -352,11 +352,11 @@ def search_item():
     try:
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """Select account.accountid, itemname, itemid, price, quantity, imagepath, description from account
+        postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
-        where itemname ILIKE %s or description ILIKE %s;"""
-        search_item = ('su','su')
+        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s;"""
+        search_item = ('su','su','02201')
         ilike_pattern = "%{}%".format(search_item)
         cursor.execute(postgres_get_query, ilike_pattern)
         connection.commit()
@@ -381,11 +381,45 @@ def search_item():
 
 @app.route('/order')
 def order_item():
-    return "Order Item here"
+    try:
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+        postgres_order_query = """with current_order as (
+        INSERT INTO orders (accountid) values (%s)
+        RETURNING *), newquantity as (
+        UPDATE inventory SET quantity = quantity - %s where itemid = %s and itemname ilike %s
+        returning *) 
+        INSERT into ordereditems (itemid, orderid, quantity) values
+        ((select itemid from newquantity), (select orderid from current_order),
+        (%s))
+        WHERE orderid = (select orderid from current_order);"""
+        order_item = ('3','su')
+        cursor.execute(postgres_order_query, order_item)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = json.dumps(cursor.fetchall())
+        resp = jsonify(success=True)
+        print (credentials)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to find item", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
     #To-do:
-    #Update Item database call
+    #Search Item 
     #Order Item
+    #add to cart
