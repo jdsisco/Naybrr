@@ -42,10 +42,11 @@ def new_user():
         print (count, "Record inserted successfully into account table")
         credentials = cursor.fetchall()
         print (credentials)
-        resp = jsonify(success=True)
-        r = [dict((cursor.description[i][0], value) \
-               for i, value in enumerate(row)) for row in cursor.fetchall()]
-        return (r[0] if r else None) if one else r
+        results = []
+        columns = ('username')
+        for row in credentials:
+            results.append(dict(zip(columns, row)))
+        return json.dumps(results)
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
