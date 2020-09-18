@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, make_response, render_template, url_for, json
+from flask import Flask, request, jsonify, make_response, render_template, url_for, json, requests
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import ModelSchema
 from marshmallow import fields
@@ -28,7 +28,7 @@ def new_user():
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
-        postgres_insert_query = """ (WITH neighbor AS (
+        postgres_insert_query = """ WITH neighbor AS (
             INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)
             RETURNING accountid, username), newaddress as (
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
