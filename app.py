@@ -263,7 +263,7 @@ def neighbor():
         credentials = json.dumps(cursor.fetchall())
         resp = jsonify(credentials)
         print (credentials)
-        return credentials
+        return resp
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
