@@ -180,7 +180,7 @@ def find_user():
     try:
         zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """ SELECT accountid, username FROM account
         INNER JOIN customeraddress USING (accountid) 
         WHERE customeraddress.zip = %s; """
@@ -188,7 +188,7 @@ def find_user():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        credentials = json.dumps(cursor.fetchall())
+        credentials = cursor.fetchall()
         resp = jsonify(credentials)
         print (credentials)
         return resp
