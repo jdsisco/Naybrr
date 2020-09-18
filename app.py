@@ -452,10 +452,9 @@ def order_info():
         orderid = request.args.get("orderId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
-        postgres_order_query = """with order_info as (
-        select orderid, itemid, itemname, price, ordereditems.quantity, orders.accountid, dateordered from ordereditems
+        postgres_order_query = """select orderid, itemid, itemname, price, ordereditems.quantity, orders.accountid, dateordered from ordereditems
         inner join orders using (orderid)
-        inner join inventory using (itemid) where orderid = %(int)s;"""
+        inner join inventory using (itemid) where orderid = %s;"""
         order_item = (orderid,)
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
