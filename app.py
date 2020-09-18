@@ -352,13 +352,13 @@ def find_item():
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE inventory.itemid ilike %s; """
+        WHERE inventory.itemid = %s; """
         search_zip = (itemid,)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(success=True)
+        resp = jsonify(credentials))
         print (credentials)
         return resp
             
