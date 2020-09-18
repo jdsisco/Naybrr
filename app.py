@@ -455,7 +455,7 @@ def order_info():
         postgres_order_query = """with order_info as (
         select orderid, itemid, itemname, price, ordereditems.quantity, orders.accountid, dateordered from ordereditems
         inner join orders using (orderid)
-        inner join inventory using (itemid) where orderid = %s;"""
+        inner join inventory using (itemid) where orderid = %(int)s;"""
         order_item = (orderid,)
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
