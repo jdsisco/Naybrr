@@ -378,13 +378,16 @@ def find_item():
 @app.route('/search',methods=["GET","POST"])
 def search_item():
     try:
+        itemname = request.args.get("search")
+        description = request.args.get("search")
+        zip = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
         where (itemname ILIKE %s or description ILIKE %s) AND zip = %s;"""
-        search_item = ('su','su','02201')
+        search_item = (itemname, description, zip)
         ilike_pattern = "%{}%".format(search_item)
         cursor.execute(postgres_get_query, ilike_pattern)
         connection.commit()
