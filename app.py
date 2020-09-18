@@ -346,13 +346,14 @@ def delete_item():
 @app.route("/item",methods=["GET", "POST"])
 def find_item():
     try:
+        itemid = request.args.get("itemId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """ SELECT username, itemid, itemname, price, quantity, imagepath, description FROM account 
+        postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE customeraddress.zip = %s; """
-        search_zip = ('02201',)
+        WHERE inventory.itemid ilike %s; """
+        search_zip = (itemid,)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
