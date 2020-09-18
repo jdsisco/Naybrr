@@ -358,7 +358,7 @@ def find_item():
         connection.commit()
         count = cursor.rowcount
         credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(credentials))
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
