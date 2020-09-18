@@ -24,7 +24,7 @@ def new_user():
         line2 = request.args.get("line2")
         city = request.args.get("city")
         state = request.args.get("state")
-        zip = request.args.get("zip")
+        zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
@@ -33,17 +33,20 @@ def new_user():
             RETURNING accountid, username), newaddress as (
             INSERT INTO customeraddress (accountid, line1, line2, city, state, zip) 
             SELECT accountid,%s,%s,%s,%s,%s from neighbor) 
-            select row_to_json (row) 
-            from (SELECT username from neighbor) as row;
+            SELECT username from neighbor;
         """
-        record_to_insert = (username, email, password, line1, line2, city,state,zip)
+        record_to_insert = (username, email, password, line1, line2, city,state,zipcode)
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
-        #credentials = cursor.fetchall()
-        #print (credentials)
+        credentials = cursor.fetchall()
+        print (credentials)
         resp = jsonify(success=True())
+        json_data=[]
+            for result in rv:
+        json_data.append(dict(zip(row_headers,result)))
+            return json.dumps(credentials)
         return resp
 
     except (Exception, psycopg2.Error) as error :
@@ -106,7 +109,7 @@ def update_user():
             line2 = request.args.get("line2")
             city = request.args.get("city")
             state = request.args.get("state")
-            zip = request.args.get("zip")
+            zipcode = request.args.get("zip")
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
             postgres_update_query =  """WITH update_values (username, email, hashpass, line1, line2, city, state, zip) AS (
@@ -121,7 +124,7 @@ def update_user():
             line2 = (select line2 from update_values), city = (select city from update_values), 
             state = (select state from update_values), zip = (select zip from update_values)
             WHERE accountid = (select accountid from updateneighbor);"""
-            record_to_update = (username, email, password, line1, line2, city,state,zip)
+            record_to_update = (username, email, password, line1, line2, city,state,zipcode)
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
@@ -149,14 +152,14 @@ def update_user():
 def find():
     try:
         username = request.args.get("search")
-        zip = request.args.get("zip")
+        zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ select row_to_json (find) 
         from (SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
         WHERE account.username ilike %s and customeraddress.zip = %s) find; """
-        search_zip = (username, zip)
+        search_zip = (username, zipcode)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
@@ -181,13 +184,13 @@ def find():
 @app.route("/nearby",methods=["GET","POST"])
 def find_user():
     try:
-        zip = request.args.get("zip")
+        zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT accountid, username FROM account
         INNER JOIN customeraddress USING (accountid) 
         WHERE customeraddress.zip = %s; """
-        search_zip = (zip,)
+        search_zip = (zipcode,)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
@@ -384,14 +387,14 @@ def search_item():
     try:
         itemname = request.args.get("search")
         description = request.args.get("search")
-        zip = request.args.get("zip")
+        zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
         where (itemname ILIKE %s or description ILIKE %s) AND zip = %s;"""
-        search_item = (itemname, description, zip)
+        search_item = (itemname, description, zipcode)
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
