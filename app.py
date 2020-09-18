@@ -11,7 +11,6 @@ from psycopg2 import Error
 from psycopg2.extras import RealDictCursor
 
 DATABASE_URL = os.environ['DATABASE_URL']
-#conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 empty = None
 app = Flask(__name__)
@@ -410,28 +409,27 @@ def search_item():
             connection.close()
             print("PostgreSQL connection is closed")
 
-@app.route('/order')
+@app.route('/order',methods=["GET","POST"])
 def order_item():
     try:
+        accountid = request.args.get("accountId")
         itemid = request.args.get("itemId")
         quantity = request.args.get("quantity")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_order_query = """with current_order as (
         INSERT INTO orders (accountid) values (%s)
         RETURNING *), newquantity as (
-        UPDATE inventory SET quantity = quantity - %s where itemid = %s and itemname ilike %s
-        returning *) 
+        UPDATE inventory SET quantity = quantity - %s where itemid = %s returning *) 
         INSERT into ordereditems (itemid, orderid, quantity) values
         ((select itemid from newquantity), (select orderid from current_order),
-        (%s))
-        WHERE orderid = (select orderid from current_order);"""
-        order_item = (itemid,quantity)
+        (%s)) returning orderid, itemid, %s as quantity;"""
+        order_item = (accountid,quantity,itemid,quantity,quantity)
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
         count = cursor.rowcount
-        credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(success=True)
+        credentials = cursor.fetchall()
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
@@ -448,11 +446,46 @@ def order_item():
             connection.close()
             print("PostgreSQL connection is closed")
 
+@app.route('/status',methods=["GET","POST"])
+def order_info():
+    try:
+        orderid = request.args.get("accountId")
+        itemid = request.args.get("itemId")
+        quantity = request.args.get("quantity")
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
+        postgres_order_query = """with order_info as (
+        select 
+        RETURNING *), newquantity as (
+        UPDATE inventory SET quantity = quantity - %s where itemid = %s returning *) 
+        INSERT into ordereditems (itemid, orderid, quantity) values
+        ((select itemid from newquantity), (select orderid from current_order),
+        (%s));"""
+        order_item = (accountid,quantity,itemid,quantity)
+        cursor.execute(postgres_order_query, order_item)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = cursor.fetchall()
+        resp = jsonify(success=True)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to find item", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+'
+
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
     #To-do:
-    #Search Item improvement (if time permits)
     #Order Item
-    #add to cart
