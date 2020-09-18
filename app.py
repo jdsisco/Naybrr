@@ -44,9 +44,9 @@ def new_user():
         print (credentials)
         resp = jsonify(success=True)
         json_data=[]
-        for result in rv:
+        for result in credentials:
             json_data.append(dict(zip(row_headers,result)))
-        return json.dumps(credentials)
+        return json.dumps(json_data)
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
