@@ -149,16 +149,17 @@ def find():
         zip = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """ SELECT account.accountid, username FROM account 
+        postgres_get_query = """ select row_to_json (find) 
+        from (SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE account.username ilike %s and customeraddress.zip = %s; """
+        WHERE account.username ilike %s and customeraddress.zip = %s) find; """
         search_zip = (username, zip)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        resp = json.dumps(cursor.fetchall())
-        #resp = jsonify(credentials)
-        #print (credentials)
+        credentials = json.dumps(cursor.fetchall())
+        resp = jsonify(credentials)
+        print (credentials)
         return resp
             
     except (Exception, psycopg2.Error) as error :
