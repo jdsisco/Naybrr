@@ -127,7 +127,7 @@ def update_user():
                 
         except (Exception, psycopg2.Error) as error :
             if(connection):
-                print("Failed to retrieve record", error)
+                print("Failed to update record", error)
                 resp = jsonify(success=False)
                 return resp
 
@@ -156,7 +156,7 @@ def find():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        credentials = json.dumps(cursor.fetchall())
+        credentials = json.dump(cursor.fetchall())
         resp = jsonify(credentials)
         print (credentials)
         return resp
@@ -412,6 +412,8 @@ def search_item():
 @app.route('/order')
 def order_item():
     try:
+        itemid = request.args.get("itemId")
+        quantity = request.args.get("quantity")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_order_query = """with current_order as (
@@ -423,7 +425,7 @@ def order_item():
         ((select itemid from newquantity), (select orderid from current_order),
         (%s))
         WHERE orderid = (select orderid from current_order);"""
-        order_item = ('3','su')
+        order_item = (itemid,quantity)
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
         count = cursor.rowcount
@@ -450,6 +452,6 @@ if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
     #To-do:
-    #Search Item 
+    #Search Item improvement (if time permits)
     #Order Item
     #add to cart
