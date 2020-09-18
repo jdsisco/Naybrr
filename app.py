@@ -359,7 +359,7 @@ def find_item():
         connection.commit()
         count = cursor.rowcount
         credentials = cursor.fetchall()
-        resp = jsonify(credentials))
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
@@ -393,7 +393,7 @@ def search_item():
         connection.commit()
         count = cursor.rowcount
         credentials = cursor.fetchall()
-        resp = jsonify(credentials))
+        resp = jsonify(credentials)
         print (credentials)
         return resp
             
