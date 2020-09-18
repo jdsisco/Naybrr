@@ -59,12 +59,14 @@ def new_user():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     try:
+        username = request.args.get("username")
+        password = request.args.get("password")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         
         postgres_insert_query = """  SELECT username FROM account where username = %s AND hashpass = %s;
         """
-        record_to_insert = ('test4', 'asdff')
+        record_to_insert = (username, password)
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
