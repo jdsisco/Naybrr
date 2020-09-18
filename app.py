@@ -159,8 +159,8 @@ def find():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
+        credentials = cursor.fetchall()
         resp = jsonify(credentials)
-        #print (credentials)
         return resp
             
     except (Exception, psycopg2.Error) as error :
