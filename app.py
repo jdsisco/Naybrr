@@ -250,13 +250,12 @@ def add_item():
 def neighbor():
     try:
         username = request.args.get("username")
-        accountid = request.args.get("accountid")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE account.username ilike '%s'; """
+        WHERE account.username ilike %s; """
         search_user = (username,)
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
@@ -264,7 +263,7 @@ def neighbor():
         credentials = json.dumps(cursor.fetchall())
         resp = jsonify(credentials)
         print (credentials)
-        return resp
+        return credentials
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
