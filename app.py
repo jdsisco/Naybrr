@@ -250,6 +250,7 @@ def add_item():
 def neighbor():
     try:
         username = request.args.get("username")
+        accountid = request.args.get("accountid")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
@@ -267,7 +268,7 @@ def neighbor():
             
     except (Exception, psycopg2.Error) as error :
         if(connection):
-            print("Failed to find zip code", error)
+            print("Failed to find person", error)
             resp = jsonify(success=False)
             return resp
 
