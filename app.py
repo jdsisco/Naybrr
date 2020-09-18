@@ -151,7 +151,7 @@ def find():
         cursor = connection.cursor()
         postgres_get_query = """ SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE username ilike %s and zip = %s; """
+        WHERE username ilike %s and zip = %s returning username, zip; """
         search_zip = (username, zip)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
