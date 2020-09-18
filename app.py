@@ -388,7 +388,6 @@ def search_item():
         inner join customeraddress using (accountid)
         where (itemname ILIKE %s or description ILIKE %s) AND zip = %s;"""
         search_item = (itemname, description, zip)
-        #ilike_pattern = "%{}%".format(search_item)
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
