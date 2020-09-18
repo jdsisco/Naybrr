@@ -460,7 +460,7 @@ def order_info():
         connection.commit()
         count = cursor.rowcount
         credentials = cursor.fetchall()
-        resp = jsonify(success=True)
+        resp = jsonify(credentials)
         return resp
             
     except (Exception, psycopg2.Error) as error :
