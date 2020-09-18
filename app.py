@@ -253,8 +253,8 @@ def neighbor():
         accountid = request.args.get("accountid")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
-        postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
-        INNER JOIN inventory USING (accountid)
+        postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM inventory
+        INNER JOIN account USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
         WHERE account.username ilike %s; """
         search_user = (username,)
