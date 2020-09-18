@@ -481,7 +481,6 @@ def order_info():
             cursor.close()
             connection.close()
             print("PostgreSQL connection is closed")
-'
 
 
 if __name__ == '__main__':
