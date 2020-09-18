@@ -252,7 +252,7 @@ def neighbor():
     try:
         username = request.args.get("username")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
@@ -261,8 +261,8 @@ def neighbor():
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
         count = cursor.rowcount
-        credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(credentials)
+        credentials = cursor.fetchall()
+        resp = jsonify(credentials))
         print (credentials)
         return resp
             
@@ -349,7 +349,7 @@ def find_item():
     try:
         itemid = request.args.get("itemId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
@@ -358,8 +358,8 @@ def find_item():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(credentials)
+        credentials = cursor.fetchall()
+        resp = jsonify(credentials))
         print (credentials)
         return resp
             
@@ -383,7 +383,7 @@ def search_item():
         description = request.args.get("search")
         zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
@@ -392,8 +392,8 @@ def search_item():
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
-        credentials = json.dumps(cursor.fetchall())
-        resp = jsonify(credentials)
+        credentials = cursor.fetchall()
+        resp = jsonify(credentials))
         print (credentials)
         return resp
             
