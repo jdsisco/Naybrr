@@ -8,6 +8,7 @@ import json
 import os
 import psycopg2
 from psycopg2 import Error
+ from psycopg2.extras import RealDictCursor
 
 DATABASE_URL = os.environ['DATABASE_URL']
 #conn = psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -26,7 +27,7 @@ def new_user():
         state = request.args.get("state")
         zipcode = request.args.get("zip")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         
         postgres_insert_query = """ WITH neighbor AS (
             INSERT INTO account (username, email, hashpass) VALUES (%s,%s,%s)
@@ -41,12 +42,12 @@ def new_user():
         count = cursor.rowcount
         print (count, "Record inserted successfully into account table")
         credentials = cursor.fetchall()
-        print (credentials)
-        results = []
-        columns = ('username')
-        for row in credentials:
-            results.append(dict(zip(columns, row)))
-        return json.dumps(results, indent=1)
+        #print (credentials)
+        #results = []
+        #columns = ('username')
+        #for row in credentials:
+        #    results.append(dict(zip(columns, row)))
+        return json.dumps(credentials)
 
     except (Exception, psycopg2.Error) as error :
         if(connection):
