@@ -74,7 +74,7 @@ def login():
             resp = jsonify({"accountid":-1})
             return resp
         else:
-            credentials = cursor.fetchall()
+            credentials = cursor.fetchone()
             resp = jsonify(credentials)
             print (credentials)
             return resp
