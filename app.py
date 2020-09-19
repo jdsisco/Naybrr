@@ -254,7 +254,7 @@ def neighbor():
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE account.username ilike %s; """
+        WHERE account.username ilike %s AND quantity > 0; """
         search_user = (username,)
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
@@ -351,7 +351,7 @@ def find_item():
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE inventory.itemid = %s; """
+        WHERE inventory.itemid = %s AND quantity > 0; """
         search_zip = (itemid,)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
@@ -385,7 +385,7 @@ def search_item():
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
-        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s;"""
+        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s AND quantity > 0;"""
         search_item = (itemname, description, zipcode)
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
