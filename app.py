@@ -227,7 +227,7 @@ def add_item():
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted as new item")
-        credentials = cursor.fetchall()
+        credentials = cursor.fetchone()
         resp = jsonify(credentials)
         return resp
 
