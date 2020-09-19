@@ -63,20 +63,19 @@ def login():
         username = request.args.get("username")
         password = request.args.get("password")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
-        
-        postgres_insert_query = """  SELECT username FROM account where username = %s AND hashpass = %s;
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
+        postgres_insert_query = """  SELECT username FROM account where username = %s AND hashpass = %s returning accountid;
         """
         record_to_insert = (username, password)
         cursor.execute(postgres_insert_query, record_to_insert)
         connection.commit()
         count = cursor.rowcount
         if count == 0:
-            resp = jsonify(success=False)
+            resp = jsonify({"accountid":"-1"})
             return resp
         else:
-            credentials = json.dumps(cursor.fetchall())
-            resp = jsonify(success=True)
+            credentials = cursor.fetchall()
+            resp = jsonify(credentials)
             print (credentials)
             return resp
             
