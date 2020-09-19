@@ -214,7 +214,7 @@ def add_item():
         imagepath = request.args.get("imgPath")
         description = request.args.get("description")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = connection.cursor()
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
         
         postgres_item_query = """ WITH newitem AS (
             INSERT INTO inventory (accountid, itemname, price, quantity, imagepath, description) 
@@ -227,9 +227,8 @@ def add_item():
         connection.commit()
         count = cursor.rowcount
         print (count, "Record inserted as new item")
-        credentials = json.dumps(cursor.fetchall())
-        print (credentials)
-        resp = jsonify(success=True)
+        credentials = cursor.fetchall()
+        resp = jsonify(credentials)
         return resp
 
     except (Exception, psycopg2.Error) as error :
