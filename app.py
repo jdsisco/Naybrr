@@ -47,7 +47,7 @@ def new_user():
     except (Exception, psycopg2.Error) as error :
         if(connection):
             print("Failed to insert record into account table", error)
-            resp = jsonify({"accountid":"-1"})
+            resp = jsonify({"accountid":-1})
             return resp
 
     finally:
@@ -71,7 +71,7 @@ def login():
         connection.commit()
         count = cursor.rowcount
         if count == 0:
-            resp = jsonify({"accountid":"-1"})
+            resp = jsonify({"accountid":-1})
             return resp
         else:
             credentials = cursor.fetchall()
