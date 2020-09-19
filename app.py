@@ -64,7 +64,7 @@ def login():
         password = request.args.get("password")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
-        postgres_insert_query = """  SELECT username FROM account where username = %s AND hashpass = %s returning accountid;
+        postgres_insert_query = """  SELECT accountid FROM account where username = %s AND hashpass = %s;
         """
         record_to_insert = (username, password)
         cursor.execute(postgres_insert_query, record_to_insert)
