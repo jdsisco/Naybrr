@@ -147,12 +147,13 @@ def find():
     try:
         username = request.args.get("search")
         zipcode = request.args.get("zip")
+        accountid = request.args.get("accountid")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE account.username ilike %s and customeraddress.zip = %s; """
-        search_zip = (username, zipcode)
+        WHERE account.username ilike %s and customeraddress.zip = %s AND account.accountid != %s;"""
+        search_zip = (username, zipcode, accountid)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
