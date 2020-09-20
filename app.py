@@ -247,14 +247,14 @@ def add_item():
 @app.route("/neighbor",methods=["GET","POST"])
 def neighbor():
     try:
-        username = request.args.get("username")
+        accountid = request.args.get("accountId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE account.username ilike %s AND quantity > 0; """
-        search_user = (username,)
+        WHERE account.accountid ilike %s AND quantity > 0; """
+        search_user = (accountid,)
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
         count = cursor.rowcount
@@ -379,13 +379,14 @@ def search_item():
         itemname = request.args.get("search")
         description = request.args.get("search")
         zipcode = request.args.get("zip")
+        accountid = request.args.get("accountId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
-        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s AND quantity > 0;"""
-        search_item = (itemname, description, zipcode)
+        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s AND quantity > 0 AND account.accountid != %s;"""
+        search_item = (itemname, description, zipcode, accountid)
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
@@ -474,6 +475,36 @@ def order_info():
             connection.close()
             print("PostgreSQL connection is closed")
 
+@app.route('/zipcode',methods=["GET","POST"])
+def find_zip():
+    try:
+        accountid = request.args.get("accountId")
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
+        postgres_get_query = """Select zip from account
+        inner join customeraddress using (accountid)
+        where account.accountid = %s;"""
+        search_item = (itemname, description, zipcode, accountid)
+        cursor.execute(postgres_get_query, search_item)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = cursor.fetchone()
+        resp = jsonify(credentials)
+        print (credentials)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to find zip code", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed"
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
