@@ -427,7 +427,7 @@ def order_item():
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
         count = cursor.rowcount
-        credentials = cursor.fetchall()
+        credentials = cursor.fetchone()
         resp = jsonify(credentials)
         print (credentials)
         return resp
@@ -458,7 +458,7 @@ def order_info():
         cursor.execute(postgres_order_query, order_item)
         connection.commit()
         count = cursor.rowcount
-        credentials = cursor.fetchall()
+        credentials = cursor.fetchone()
         resp = jsonify(credentials)
         return resp
             
