@@ -147,7 +147,7 @@ def find():
     try:
         username = request.args.get("search")
         zipcode = request.args.get("zip")
-        accountid = request.args.get("accountid")
+        accountid = request.args.get("accountId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """SELECT account.accountid, username FROM account 
