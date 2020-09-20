@@ -253,7 +253,7 @@ def neighbor():
         postgres_get_query = """ SELECT itemid, itemname, price, quantity, imagepath, description FROM account 
         INNER JOIN inventory USING (accountid)
         INNER JOIN customeraddress USING (accountid) 
-        WHERE account.accountid ilike %s AND quantity > 0; """
+        WHERE account.accountid = %s AND quantity > 0; """
         search_user = (accountid,)
         cursor.execute(postgres_get_query, search_user)
         connection.commit()
