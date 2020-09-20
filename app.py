@@ -506,6 +506,37 @@ def find_zip():
             connection.close()
             print("PostgreSQL connection is closed")
 
+@app.route('/info',methods=["GET","POST"])
+def user_info():
+    try:
+        accountid = request.args.get("accountId")
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
+        postgres_get_query = """ SELECT accountid, username, line1, line2, city, state, zip FROM account 
+        INNER JOIN customeraddress USING (accountid) 
+        WHERE account.accountid = %s; """
+        search_user = (accountid,)
+        cursor.execute(postgres_get_query, search_user)
+        connection.commit()
+        count = cursor.rowcount
+        credentials = cursor.fetchone()
+        resp = jsonify(credentials)
+        print (credentials)
+        return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to find person", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
