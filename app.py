@@ -355,7 +355,7 @@ def find_item():
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
         count = cursor.rowcount
-        credentials = cursor.fetchall()
+        credentials = cursor.fetchone()
         resp = jsonify(credentials)
         print (credentials)
         return resp
