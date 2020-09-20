@@ -484,7 +484,7 @@ def find_zip():
         postgres_get_query = """Select zip from account
         inner join customeraddress using (accountid)
         where account.accountid = %s;"""
-        search_item = (itemname, description, zipcode, accountid)
+        search_item = (accountid,)
         cursor.execute(postgres_get_query, search_item)
         connection.commit()
         count = cursor.rowcount
