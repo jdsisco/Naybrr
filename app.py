@@ -506,6 +506,7 @@ def find_zip():
             connection.close()
             print("PostgreSQL connection is closed"
 
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
