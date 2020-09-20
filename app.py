@@ -152,7 +152,7 @@ def find():
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE account.username like %%%s%% and customeraddress.zip = %s AND account.accountid != %s;"""
+        WHERE account.username ilike %s and customeraddress.zip = %s AND account.accountid != %s;"""
         search_zip = (username, zipcode, accountid)
         cursor.execute(postgres_get_query, search_zip)
         connection.commit()
