@@ -538,7 +538,7 @@ def user_info():
             connection.close()
             print("PostgreSQL connection is closed")
 
-@app.route('/test,'methods=["GET","POST"])
+@app.route('/test',methods=["GET","POST"])
 def test():
     testQuery = request.args.get("query")
     print (testQuery)
