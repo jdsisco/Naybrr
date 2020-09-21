@@ -542,7 +542,15 @@ def user_info():
 def test():
     testQuery = request.args.get("query")
     print (testQuery)
-    return testQuery
+    cursor = connection.cursor(cursor_factory=RealDictCursor)
+    postgres_get_query = """ Insert into test values %s returning %s; """
+    search_user = (query,)
+    cursor.execute(postgres_get_query, search_user)
+    connection.commit()
+    count = cursor.rowcount
+    credentials = cursor.fetchone()
+    resp = jsonify(credentials)    
+    return credentials
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
