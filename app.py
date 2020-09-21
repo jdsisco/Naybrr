@@ -138,8 +138,7 @@ def update_user():
     except:
         print("Failed to connect")
         xconn = jsonify(success=False)
-        return xconn
-def update_no_pass                
+        return xconn           
 
 @app.route("/find", methods=["GET","POST"])
 def find():
