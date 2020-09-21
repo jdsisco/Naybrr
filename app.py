@@ -157,7 +157,7 @@ def new_update():
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
             UPDATE account SET email = (Select email from update_values), 
-            hashpass = case when %s not null then (select hashpass from update_values) when hashpass is null then hashpass = hashpass end
+            hashpass = case when %s is null then hashpass else (select hashpass from update_values) end
             WHERE account.accountid = %s 
             RETURNING *)
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
