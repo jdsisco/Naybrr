@@ -114,7 +114,56 @@ def update_user():
             line2 = (select line2 from update_values), city = (select city from update_values), 
             state = (select state from update_values), zip = (select zip from update_values)
             WHERE accountid = %s;"""
-            record_to_update = (accountid, email, line1, line2, city,state,zipcode,accountid,accountid)
+            record_to_update = (accountid, email, password, line1, line2, city,state,zipcode,accountid,accountid)
+            cursor.execute(postgres_update_query, record_to_update)
+            connection.commit()
+            count = cursor.rowcount
+            resp = jsonify(success=True)
+            return resp
+                
+        except (Exception, psycopg2.Error) as error :
+            if(connection):
+                print("Failed to update record", error)
+                resp = jsonify(success=False)
+                return resp
+
+        finally:
+            #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+    except:
+        print("Failed to connect")
+        xconn = jsonify(success=False)
+        return xconn           
+
+
+@app.route("/newUpdate",methods=["GET","POST"])
+    try:
+        try:
+            accountid = request.args.get("accountId")
+            email = request.args.get("email")
+            password = request.args.get("password")
+            line1 = request.args.get("line1")
+            line2 = request.args.get("line2")
+            city = request.args.get("city")
+            state = request.args.get("state")
+            zipcode = request.args.get("zip")
+            connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+            cursor = connection.cursor()
+            postgres_update_query =  """WITH update_values (accountid, email, hashpass, line1, line2, city, state, zip) AS (
+            values (%s,%s,%s,%s,%s,%s,%s,%s)),
+            updateneighbor as (
+            UPDATE account SET email = (Select email from update_values), 
+            hashpass = (select hashpass from update_values) when hashpass not null else hashpass = hashpass
+            WHERE account.accountid = %s 
+            RETURNING *)
+            UPDATE customeraddress SET line1 = (select line1 from update_values), 
+            line2 = (select line2 from update_values), city = (select city from update_values), 
+            state = (select state from update_values), zip = (select zip from update_values)
+            WHERE accountid = %s;"""
+            record_to_update = (accountid, email, password, line1, line2, city,state,zipcode,accountid,accountid)
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
