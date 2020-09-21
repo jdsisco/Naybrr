@@ -110,7 +110,7 @@ def update_user():
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
             UPDATE account SET email = (Select email from update_values), 
-            hashpass = (select hashpass from update_values) WHERE account.accountid = %s 
+            hashpass = (select hashpass from update_values not null) WHERE account.accountid = %s 
             RETURNING *)
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
             line2 = (select line2 from update_values), city = (select city from update_values), 
@@ -139,7 +139,8 @@ def update_user():
         print("Failed to connect")
         xconn = jsonify(success=False)
         return xconn
-                
+def update_no_pass                
+
 @app.route("/find", methods=["GET","POST"])
 def find():
     try:
