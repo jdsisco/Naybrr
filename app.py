@@ -550,7 +550,7 @@ def user_info():
         accountid = request.args.get("accountId")
         connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor(cursor_factory=RealDictCursor)
-        postgres_get_query = """ SELECT accountid, username, line1, line2, city, state, zip FROM account 
+        postgres_get_query = """ SELECT accountid, username, email, line1, line2, city, state, zip FROM account 
         INNER JOIN customeraddress USING (accountid) 
         WHERE account.accountid = %s; """
         search_user = (accountid,)
