@@ -545,7 +545,7 @@ def test():
     connection = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = connection.cursor(cursor_factory=RealDictCursor)
     postgres_get_query = """ Insert into test values %s returning %s; """
-    search_user = (query,)
+    search_user = (testQuery,)
     cursor.execute(postgres_get_query, search_user)
     connection.commit()
     count = cursor.rowcount
