@@ -110,7 +110,7 @@ def update_user():
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
             UPDATE account SET email = (Select email from update_values), 
-            hashpass = (select hashpass from update_values not null) WHERE account.accountid = %s 
+            hashpass = (select hashpass from update_values) WHERE account.accountid = %s 
             RETURNING *)
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
             line2 = (select line2 from update_values), city = (select city from update_values), 
@@ -139,6 +139,40 @@ def update_user():
         print("Failed to connect")
         xconn = jsonify(success=False)
         return xconn           
+
+def update_login():
+    try:
+        username = request.args.get("username")
+        password = request.args.get("password")
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor(cursor_factory=RealDictCursor)
+        postgres_insert_query = """  SELECT accountid FROM account where username = %s AND hashpass = %s;
+        """
+        record_to_insert = (username, password)
+        cursor.execute(postgres_insert_query, record_to_insert)
+        connection.commit()
+        count = cursor.rowcount
+        if count == 0:
+            resp = jsonify({"accountid":-1})
+            return resp
+        else:
+            credentials = cursor.fetchone()
+            resp = jsonify(credentials)
+            print (credentials)
+            return resp
+            
+    except (Exception, psycopg2.Error) as error :
+        if(connection):
+            print("Failed to insert record into account table", error)
+            resp = jsonify(success=False)
+            return resp
+
+    finally:
+        #closing database connection.
+        if(connection):
+            cursor.close()
+            connection.close()
+            print("PostgreSQL connection is closed")
 
 @app.route("/find", methods=["GET","POST"])
 def find():
