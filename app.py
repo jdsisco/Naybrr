@@ -106,7 +106,7 @@ def update_user():
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
             postgres_update_query =  """WITH update_values (accountid, email, line1, line2, city, state, zip) AS (
-            values (%s,%s,%s,%s,%s,%s,%s,%s)),
+            values (%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
             UPDATE account SET email = (Select email from update_values) WHERE account.accountid = %s 
             RETURNING *)
