@@ -115,7 +115,7 @@ def update_user():
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
             line2 = (select line2 from update_values), city = (select city from update_values), 
             state = (select state from update_values), zip = (select zip from update_values)
-            WHERE accountid = %s);"""
+            WHERE accountid = %s;"""
             record_to_update = (accountid, email, password, line1, line2, city,state,zipcode,accountid,accountid)
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
