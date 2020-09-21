@@ -538,6 +538,12 @@ def user_info():
             connection.close()
             print("PostgreSQL connection is closed")
 
+@app.route('/test,'methods=["GET","POST"])
+def test():
+    testQuery = request.args.get("query")
+    print (testQuery)
+    return testQuery
+
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
 
