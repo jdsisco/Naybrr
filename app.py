@@ -95,7 +95,7 @@ def login():
 @app.route("/update", methods=["GET","POST"])
 def update_user():
     try:
-         try:
+        try:
             accountid = request.args.get("accountId")
             email = request.args.get("email")
             password = request.args.get("password")
@@ -110,7 +110,7 @@ def update_user():
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
             UPDATE account SET email = (Select email from update_values), 
-            hashpass = case when %s is null then hashpass else (select hashpass from update_values) end
+            hashpass = case when %s is null then hashpass else (select hashpass from update_values)  end
             WHERE account.accountid = %s 
             RETURNING *)
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
@@ -139,7 +139,7 @@ def update_user():
     except:
         print("Failed to connect")
         xconn = jsonify(success=False)
-        return xconn                      
+        return xconn           
 
 @app.route("/updateLogin",methods=["GET","POST"])
 def update_login():
