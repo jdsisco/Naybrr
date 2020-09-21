@@ -152,7 +152,7 @@ def find():
         cursor = connection.cursor(cursor_factory=RealDictCursor)
         postgres_get_query = """SELECT account.accountid, username FROM account 
         INNER JOIN customeraddress on customeraddress.accountid = account.accountid 
-        WHERE account.username like %s and customeraddress.zip = %s AND account.accountid != %s;"""
+        WHERE account.username ilike %s and customeraddress.zip = %s AND account.accountid != %s;"""
         likeUser = '%'+ username + '%'
         search_zip = (likeUser, zipcode, accountid)
         cursor.execute(postgres_get_query, search_zip)
@@ -387,7 +387,7 @@ def search_item():
         postgres_get_query = """Select zip, account.accountid, itemname, itemid, price, quantity, imagepath, description from account
         inner join inventory using (accountid)
         inner join customeraddress using (accountid)
-        where (itemname LIKE %s or description LIKE %s) AND zip = %s AND quantity > 0 AND account.accountid != %s;"""
+        where (itemname ILIKE %s or description ILIKE %s) AND zip = %s AND quantity > 0 AND account.accountid != %s;"""
         likeDesc = '%'+ description + '%'
         likeItem = '%'+ itemname + '%'
         search_item = (likeItem, likeDesc, zipcode, accountid)
