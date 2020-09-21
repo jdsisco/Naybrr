@@ -542,6 +542,7 @@ def user_info():
 def test():
     testQuery = request.args.get("query")
     print (testQuery)
+    connection = psycopg2.connect(DATABASE_URL, sslmode='require')
     cursor = connection.cursor(cursor_factory=RealDictCursor)
     postgres_get_query = """ Insert into test values %s returning %s; """
     search_user = (query,)
