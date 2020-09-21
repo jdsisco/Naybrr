@@ -140,6 +140,7 @@ def update_user():
 
 
 @app.route("/newUpdate",methods=["GET","POST"])
+def new_update():
     try:
         try:
             accountid = request.args.get("accountId")
