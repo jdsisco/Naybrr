@@ -96,7 +96,7 @@ def login():
 def update_user():
     try:
         try:
-            username = request.args.get("username")
+            accountid = request.args.get("accountId")
             email = request.args.get("email")
             password = request.args.get("password")
             line1 = request.args.get("line1")
@@ -106,19 +106,18 @@ def update_user():
             zipcode = request.args.get("zip")
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
-            postgres_update_query =  """WITH update_values (username, email, hashpass, line1, line2, city, state, zip) AS (
+            postgres_update_query =  """WITH update_values (accountid, email, hashpass, line1, line2, city, state, zip) AS (
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
-            UPDATE account SET username = (Select username from update_values), 
-            email = (Select email from update_values), 
-            hashpass = (select hashpass from update_values) WHERE Username = 
-            (select username from update_values) 
+            UPDATE account SET email = (Select email from update_values), 
+            hashpass = (select hashpass from update_values) WHERE accountid = 
+            (select accountid from update_values) 
             RETURNING *)
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
             line2 = (select line2 from update_values), city = (select city from update_values), 
             state = (select state from update_values), zip = (select zip from update_values)
-            WHERE accountid = (select accountid from updateneighbor);"""
-            record_to_update = (username, email, password, line1, line2, city,state,zipcode)
+            WHERE accountid = (select accountid from update_values);"""
+            record_to_update = (accountid, email, password, line1, line2, city,state,zipcode)
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
