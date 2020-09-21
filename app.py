@@ -140,6 +140,7 @@ def update_user():
         xconn = jsonify(success=False)
         return xconn           
 
+@app.route("/updateLogin",methods=["GET","POST"])
 def update_login():
     try:
         username = request.args.get("username")
