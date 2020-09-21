@@ -98,7 +98,6 @@ def update_user():
         try:
             accountid = request.args.get("accountId")
             email = request.args.get("email")
-            password = request.args.get("password")
             line1 = request.args.get("line1")
             line2 = request.args.get("line2")
             city = request.args.get("city")
@@ -106,17 +105,16 @@ def update_user():
             zipcode = request.args.get("zip")
             connection = psycopg2.connect(DATABASE_URL, sslmode='require')
             cursor = connection.cursor()
-            postgres_update_query =  """WITH update_values (accountid, email, hashpass, line1, line2, city, state, zip) AS (
+            postgres_update_query =  """WITH update_values (accountid, email, line1, line2, city, state, zip) AS (
             values (%s,%s,%s,%s,%s,%s,%s,%s)),
             updateneighbor as (
-            UPDATE account SET email = (Select email from update_values), 
-            hashpass = (select hashpass from update_values) WHERE account.accountid = %s 
+            UPDATE account SET email = (Select email from update_values) WHERE account.accountid = %s 
             RETURNING *)
             UPDATE customeraddress SET line1 = (select line1 from update_values), 
             line2 = (select line2 from update_values), city = (select city from update_values), 
             state = (select state from update_values), zip = (select zip from update_values)
             WHERE accountid = %s;"""
-            record_to_update = (accountid, email, password, line1, line2, city,state,zipcode,accountid,accountid)
+            record_to_update = (accountid, email, line1, line2, city,state,zipcode,accountid,accountid)
             cursor.execute(postgres_update_query, record_to_update)
             connection.commit()
             count = cursor.rowcount
